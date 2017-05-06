@@ -44,6 +44,16 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($request->is('api/*')) {
+            $message = $exception->getMessage() ?? '알 수 없는 오류가 발생했습니다.';
+            $statusCode = method_exists($exception, 'getStatusCode')
+                ? $exception->getStatusCode() : 500;
+
+            return response()->json([
+                "message" => $message,
+            ], $statusCode);
+        }
+
         return parent::render($request, $exception);
     }
 

@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Myshop\Common\Model\Money;
 
+/**
+ * @property string title
+ * @property int stock
+ * @property \Myshop\Common\Model\Money price
+ * @property string description
+ */
 class Product extends Model
 {
     use SoftDeletes;

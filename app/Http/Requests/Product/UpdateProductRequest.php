@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Product;
 
 use App\Http\Requests\BaseRequest;
+use Myshop\Common\Dto\ProductDto;
+use Myshop\Common\Model\Money;
 
 class UpdateProductRequest extends BaseRequest
 {
@@ -19,5 +21,15 @@ class UpdateProductRequest extends BaseRequest
             'price' => 'integer:min:10',
             'description' => 'string|min:1',
         ];
+    }
+
+    public function getProductDto()
+    {
+        return new ProductDto(
+            $this->getValue('title'),
+            $this->getValue('stock'),
+            $this->getMoney('price'),
+            $this->getValue('description')
+        );
     }
 }

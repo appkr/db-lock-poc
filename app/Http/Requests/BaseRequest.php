@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Myshop\Common\Model\Money;
 
 class BaseRequest extends FormRequest
 {
@@ -46,6 +47,13 @@ class BaseRequest extends FormRequest
             }
 
             return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+        });
+    }
+
+    protected function getMoney(string $key, $default = null)
+    {
+        return $this->getValue($key, $default, function ($value) {
+            return is_null($value) ? null : new Money($value);
         });
     }
 }

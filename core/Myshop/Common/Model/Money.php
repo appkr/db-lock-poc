@@ -65,6 +65,6 @@ class Money implements \JsonSerializable
      */
     function jsonSerialize()
     {
-        return $this->value();
+        return $this->value;
     }
 }
