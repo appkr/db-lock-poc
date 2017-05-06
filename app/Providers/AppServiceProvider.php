@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Support\GreaterThanOtherValidator;
 use Illuminate\Support\ServiceProvider;
+use Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +15,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Validator::extend(
+            'greater_than_other',
+            GreaterThanOtherValidator::class . '@validate',
+            ':attribute의 값이 잘못되었습니다.'
+        );
     }
 
     /**

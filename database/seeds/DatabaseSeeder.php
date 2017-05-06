@@ -1,11 +1,12 @@
 <?php
 
-use App\Product;
-use App\Review;
 use App\Support\KoreanLoremProvider;
-use App\User;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
+use Myshop\Common\Model\Money;
+use Myshop\Domain\Model\Product;
+use Myshop\Domain\Model\Review;
+use Myshop\Domain\Model\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -36,7 +37,7 @@ class DatabaseSeeder extends Seeder
             Product::forceCreate([
                 'title' => $faker->korSentence(3),
                 'stock' => rand(1, 5),
-                'price' => rand(1, 5) * 1000,
+                'price' => new Money(rand(1, 10) * 1000),
                 'description' => $faker->korParagraph(2),
             ]);
         }

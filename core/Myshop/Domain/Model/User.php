@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Myshop\Domain\Model;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -22,5 +22,12 @@ class User extends Authenticatable
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    // DOMAIN LOGIC
+
+    public function isAdmin()
+    {
+        return $this->getKey() === 1;
     }
 }
