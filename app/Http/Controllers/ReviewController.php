@@ -28,7 +28,7 @@ class ReviewController extends Controller
     public function index(ListReviewRequest $request, Product $product)
     {
         $paginatedReviewCollection = $this->reviewRepository->findBySearchParam(
-            $product, $request->getReviewSearchParam()
+            $request->getReviewSearchParam(), $product
         );
 
         return json()->withPagination(
@@ -47,10 +47,17 @@ class ReviewController extends Controller
     }
 
     public function update(
-        UpdateReviewRequest $request, Product $product, Review $review
+        UpdateReviewRequest $request, Product $product, int $reviewId
     ) {
+        // [선점잠금] 레코드를 조회하고 잠급니다.
+        $review = $this->reviewRepository->findByIdWithLock($reviewId, $product);
+
+        // [선점잠금] PoC를 위해 강제로 잠금을 연장합니다.
+        // 선점한 프로세스 A가 끝나고 DB 잠금이 풀리면, 다음 프로세스 B를 처리합니다.
+        sleep(10);
+
         $review = $this->reviewService->modifyReview(
-            $review, $request->getReviewDto()
+            $review, $request->getReviewDto(), $product
         );
 
         return json()->withItem($review, new ReviewTransformer);
@@ -59,7 +66,7 @@ class ReviewController extends Controller
     public function destroy(
         DeleteReviewRequest $request, Product $product, Review $review
     ) {
-        $this->reviewService->deleteReview($review);
+        $this->reviewService->deleteReview($review, $product);
 
         return json()->noContent();
     }

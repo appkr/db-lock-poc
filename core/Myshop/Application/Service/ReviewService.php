@@ -23,6 +23,7 @@ class ReviewService
 
         $review->title = $dto->getTitle();
         $review->content = $dto->getContent();
+
         $review->author()->associate($user);
         $review->product()->associate($product);
 
@@ -41,8 +42,8 @@ class ReviewService
         return $review->fresh();
     }
 
-    public function deleteReview(Review $review)
+    public function deleteReview(Review $review, Product $product = null)
     {
-        $this->reviewRepository->delete($review);
+        $this->reviewRepository->delete($review, $product);
     }
 }

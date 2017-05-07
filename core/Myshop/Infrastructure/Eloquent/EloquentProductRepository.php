@@ -18,6 +18,11 @@ class EloquentProductRepository implements ProductRepository
         return Product::findOrFail($id);
     }
 
+    public function findByIdWithLock(int $id): Product
+    {
+        return Product::lockForUpdate()->findOrFail($id);
+    }
+
     public function findBySearchParam(ProductSearchParam $param) : LengthAwarePaginator
     {
         $builder = Product::query();
