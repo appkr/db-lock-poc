@@ -6,6 +6,7 @@ use App\Http\Requests\Product\CreateProductRequest;
 use App\Http\Requests\Product\DeleteProductRequest;
 use App\Http\Requests\Product\ListProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
+use App\Transformers\ProductTransformer;
 use Myshop\Application\Service\ProductService;
 use Myshop\Domain\Model\Product;
 use Myshop\Domain\Repository\ProductRepository;
@@ -25,8 +26,13 @@ class ProductController extends Controller
 
     public function index(ListProductRequest $request)
     {
-        return $this->productRepository->findBySearchParam(
+        $paginatedProductCollection = $this->productRepository->findBySearchParam(
             $request->getProductSearchParam()
+        );
+
+        return json()->withPagination(
+            $paginatedProductCollection,
+            new ProductTransformer
         );
     }
 
@@ -36,7 +42,7 @@ class ProductController extends Controller
             $request->getProductDto()
         );
 
-        return response()->json($product);
+        return json()->withItem($product, new ProductTransformer());
     }
 
     public function update(UpdateProductRequest $request, Product $product)
@@ -45,13 +51,13 @@ class ProductController extends Controller
             $product, $request->getProductDto()
         );
 
-        return response()->json($product);
+        return json()->withItem($product, new ProductTransformer());
     }
 
     public function destroy(DeleteProductRequest $request, Product $product)
     {
         $this->productService->deleteProduct($product);
 
-        return response()->json([], 204);
+        return json()->noContent();
     }
 }
