@@ -12,18 +12,4 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
-    protected function persist(Model $model)
-    {
-        DB::transaction(function () use ($model) {
-            $model->push();
-        });
-    }
-
-    protected function remove(Model $model)
-    {
-        DB::transaction(function () use ($model) {
-            $model->delete();
-        });
-    }
 }

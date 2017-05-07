@@ -4,9 +4,17 @@ namespace Myshop\Application\Service;
 
 use Myshop\Common\Dto\ProductDto;
 use Myshop\Domain\Model\Product;
+use Myshop\Domain\Repository\ProductRepository;
 
 class ProductService
 {
+    private $productRepository;
+
+    public function __construct(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
     public function makeProduct(ProductDto $dto) : Product
     {
         $product = new Product;
@@ -16,7 +24,9 @@ class ProductService
         $product->price = $dto->getPrice();
         $product->description = $dto->getDescription();
 
-        return $product;
+        $this->productRepository->save($product);
+
+        return $product->fresh();
     }
 
     public function modifyProduct(Product $product, ProductDto $dto)
@@ -26,11 +36,13 @@ class ProductService
         $product->price = $dto->getPrice() ?: $product->price;
         $product->description = $dto->getDescription() ?: $product->description;
 
-        return $product;
+        $this->productRepository->save($product);
+
+        return $product->fresh();
     }
 
-    public function checkProductDeletePolicy(Product $product)
+    public function deleteProduct(Product $product)
     {
-        // Do something here
+        $this->productRepository->delete($product);
     }
 }

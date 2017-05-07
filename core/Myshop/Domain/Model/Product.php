@@ -7,14 +7,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Myshop\Common\Model\Money;
 
 /**
+ * @property int id
  * @property string title
  * @property int stock
  * @property \Myshop\Common\Model\Money price
  * @property string description
+ * @property mixed reviews
  */
 class Product extends Model
 {
     use SoftDeletes;
+
+    protected $with = [
+        'reviews',
+    ];
 
     // RELATIONSHIPS
 

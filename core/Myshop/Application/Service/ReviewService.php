@@ -6,9 +6,17 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Myshop\Common\Dto\ReviewDto;
 use Myshop\Domain\Model\Product;
 use Myshop\Domain\Model\Review;
+use Myshop\Domain\Repository\ReviewRepository;
 
 class ReviewService
 {
+    private $reviewRepository;
+
+    public function __construct(ReviewRepository $reviewRepository)
+    {
+        $this->reviewRepository = $reviewRepository;
+    }
+
     public function makeReview(Product $product, Authenticatable $user, ReviewDto $dto) : Review
     {
         $review = new Review;
@@ -18,7 +26,9 @@ class ReviewService
         $review->author()->associate($user);
         $review->product()->associate($product);
 
-        return $review;
+        $this->reviewRepository->save($review);
+
+        return $review->fresh();
     }
 
     public function modifyReview(Review $review, ReviewDto $dto) : Review
@@ -26,11 +36,13 @@ class ReviewService
         $review->title = $dto->getTitle() ?: $review->title;
         $review->content = $dto->getContent() ?: $review->content;
 
-        return $review;
+        $this->reviewRepository->save($review);
+
+        return $review->fresh();
     }
 
-    public function checkReviewDeletePolicy(Review $review)
+    public function deleteReview(Review $review)
     {
-        // Do something here
+        $this->reviewRepository->delete($review);
     }
 }

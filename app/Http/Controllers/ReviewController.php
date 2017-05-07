@@ -9,21 +9,26 @@ use App\Http\Requests\Review\UpdateReviewRequest;
 use Myshop\Application\Service\ReviewService;
 use Myshop\Domain\Model\Product;
 use Myshop\Domain\Model\Review;
+use Myshop\Domain\Repository\ReviewRepository;
 
 class ReviewController extends Controller
 {
     private $reviewService;
+    private $reviewRepository;
 
-    public function __construct(ReviewService $reviewService)
-    {
+    public function __construct(
+        ReviewService $reviewService, ReviewRepository $reviewRepository
+    ) {
         $this->middleware('auth.basic.once', ['except' => 'index']);
         $this->reviewService = $reviewService;
+        $this->reviewRepository = $reviewRepository;
     }
 
-    public function index(ListReviewRequest $request)
+    public function index(ListReviewRequest $request, Product $product)
     {
-        // TODO: access repository directly
-        return $request->all();
+        return $this->reviewRepository->findBySearchParam(
+            $product, $request->getReviewSearchParam()
+        );
     }
 
     public function store(CreateReviewRequest $request, Product $product)
@@ -32,9 +37,7 @@ class ReviewController extends Controller
             $product, $request->user(), $request->getReviewDto()
         );
 
-        $this->persist($review);
-
-        return response()->json($review->fresh());
+        return response()->json($review);
     }
 
     public function update(
@@ -44,17 +47,13 @@ class ReviewController extends Controller
             $review, $request->getReviewDto()
         );
 
-        $this->persist($review);
-
-        return response()->json($review->fresh());
+        return response()->json($review);
     }
 
     public function destroy(
         DeleteReviewRequest $request, Product $product, Review $review
     ) {
-        $this->reviewService->checkReviewDeletePolicy($review);
-
-        $this->remove($review);
+        $this->reviewService->deleteReview($review);
 
         return response()->json([], 204);
     }

@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -48,6 +49,11 @@ class Handler extends ExceptionHandler
             $message = $exception->getMessage() ?? '알 수 없는 오류가 발생했습니다.';
             $statusCode = method_exists($exception, 'getStatusCode')
                 ? $exception->getStatusCode() : 500;
+
+            if ($exception instanceof ModelNotFoundException) {
+                $message = '요청하신 리소스를 찾을 수 없습니다.';
+                $statusCode = 404;
+            }
 
             return response()->json([
                 "message" => $message,

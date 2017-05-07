@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use App\Support\GreaterThanOtherValidator;
 use Illuminate\Support\ServiceProvider;
+use Myshop\Domain\Repository\ProductRepository;
+use Myshop\Domain\Repository\ReviewRepository;
+use Myshop\Infrastructure\Eloquent\EloquentProductRepository;
+use Myshop\Infrastructure\Eloquent\EloquentReviewRepository;
 use Validator;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +33,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(
+            ProductRepository::class,
+            EloquentProductRepository::class
+        );
+
+        $this->app->bind(
+            ReviewRepository::class,
+            EloquentReviewRepository::class
+        );
     }
 }
