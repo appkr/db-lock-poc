@@ -1,0 +1,715 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<!DOCTYPE html>
+<html lang='en' xmlns='http://www.w3.org/1999/xhtml' >
+<head>
+<title>Schema</title>
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+<style type='text/css'>
+body {
+    font-family: 'Segoe UI', 'Lucida sans', Dialog;
+    font-size: 13px;
+    color: #444;
+    margin: 10px;
+    padding: 0;
+}
+
+table {
+    border-collapse: collapse;
+    caption-side: top;
+    width: auto;
+    margin: 10px 15px 5px 0;
+}
+
+
+.bordered td, .bordered th {
+   background-color: #fafafa;
+   border: 1px solid #D5D5D5;
+   padding: 3px 3px 3px 3px;
+   white-space:pre-wrap!important;
+}
+
+.bordered th {
+    background-color: #f0f0f0;
+    border: none;
+    border-bottom: 1px solid #cccccc;
+    padding: 3px 3px 3px 3px;
+    font-size: 13px;
+    font-weight: normal;
+    text-align: left;
+    color: #333333;
+}
+
+.section-header h2 {
+    background-color: #f0f0f0;
+    font-size: 16px;
+    font-weight: normal;
+    border-top: solid 1px #D5D5D5;
+    border-bottom: solid 1px #D5D5D5;
+    width: 95%;
+    margin: 5px 0 5px 0;
+    padding: 5px 0 5px 0;
+    color: #4d82b8;
+}
+.section-header div {
+    font-size: 70%;
+    padding-left: 5px;
+}
+
+
+a, a:visited, a:hover, a:active {
+  color: #044282;
+  text-decoration: none;
+}
+
+th > a {
+    color:#858585;
+}
+
+.lg {
+    font-size: 110%;
+}
+
+h1 {
+    font-family: Verdana,Arial,Helvetica;
+    font-weight: normal;
+    color: #4d82b8;
+    margin: 20px 0 10px 0;
+}
+
+</style>
+</head>
+
+<body>
+<div class='svg-container'>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' text-rendering='optimizeLegibility'   width='688' height='670' viewbox='0 0 688 670' >
+  <script type='text/ecmascript'>
+  <![CDATA[
+  function hghl(el) { for ( var i in el ){ document.getElementById(el[i]).setAttribute('class','highlight');  }  }
+  function uhghl(el) { for ( var i in el ){ document.getElementById(el[i]).setAttribute('class','scene'); }  } 
+  ]]>
+  </script> 
+
+<style type='text/css'>
+  text                { fill:#000000; font-family: Trebuchet MS, 'Trebuchet MS', Dialog; font-size:12px; }
+  a text:hover        { text-shadow: 0 0 6px #d0ce00; }
+  text.highlight      { text-shadow: 0 0 4px #eac533; }
+  text.colType        { fill:#b3b3b3; }
+  text.relName        { fill:#b09c7c; }
+  path                { stroke:#5c554f; stroke-width:1.15; fill:none; }
+  path.virtual        { stroke:#b7642d; }
+  path.dotted         { stroke-dasharray:4,2; }
+  path.scene          { stroke-width:10; opacity:0;}
+  path.highlight      { stroke-width:5; stroke:#eac533; opacity:0.6;}
+  rect.table          { fill:#ffffff; stroke:#aaa; stroke-width:1;shape-rendering:crispEdges;filter:url(#shadow); }
+  line.delim          { stroke-width:1; shape-rendering:crispEdges; }
+  text.callout        { fill:#000000; font-family: Trebuchet MS, 'Trebuchet MS', Dialog; font-size:12px; }
+  rect.callout        { fill:url(#calloutGradient); stroke:#bebdbd; stroke-width:0.5; filter: url(#shadow);}
+  rect.grp            { stroke:#b1b1b1; stroke-width:1.7; opacity:0.8; }
+</style>
+<defs>
+  <pattern id='layoutBgA' patternUnits='userSpaceOnUse'  width='10' height='20' x='0' y='0' viewBox='0 0 5 10'>  
+     <line x1='-2' y1='1' x2='7' y2='10' stroke='#efefef' stroke-width='.5'/>  
+     <line x1='-2' y1='6' x2='7' y2='15' stroke='#efefef' stroke-width='.5'/>  
+     <line x1='-2' y1='-4' x2='7' y2='5' stroke='#efefef' stroke-width='.5'/>  
+  </pattern>  
+  <radialGradient id='layoutBgB' gradientUnits='userSpaceOnUse' cx='50%' cy='50%' r='75%' fx='46%' fy='22%'>
+     <stop offset='0%' stop-opacity='.2' stop-color='#f5f5f5' />  
+     <stop offset='100%' stop-color='#efefef' />  
+  </radialGradient>
+  <pattern id='layoutBgTr' patternUnits='userSpaceOnUse'  width='300' height='300' x='0' y='0' viewBox='0 0 300 300'>  
+    <text x='-85' y='200' transform='rotate(-45)' style='font-family:Arial;font-size:78px;font-weight:bold;fill:#e7e7e7;'>&#84;&#82;&#73;&#65;&#76;</text> 
+    <text x='-130' y='230' transform='rotate(-45)' style='font-family:Arial;font-size:24px;font-weight:bold;fill:#e7e7e7;'>&#77;ove &#116;he m&#111;use &#111;ver &#116;ables</text> 
+    <text x='-85' y='250' transform='rotate(-45)' style='font-family:Arial;font-size:24px;font-weight:bold;fill:#e7e7e7;'>&#116;o re&#97;d &#116;he c&#111;mmen&#116;s</text> 
+  </pattern>  
+  <linearGradient id='groupUnderTitleLine' x1='0%' y1='0%' x2='100%' y2='0%' >
+          <stop offset='0%' stop-color='#999999' stop-opacity='0.7'/> 
+          <stop offset='100%' stop-color='#999999' stop-opacity='0' /> 
+   </linearGradient>
+  <radialGradient id='calloutGradient' cx='25%' cy='20%' r='80%' fx='10%' fy='10%'>
+	   <stop offset='0%' stop-color='#ffffff' />
+    <stop offset='100%' stop-color='#f8f6d1' />
+  </radialGradient>
+  <filter id='shadow' width='120%' height='120%'> 
+      <feOffset result='offOut' in='SourceGraphic' dx='1' dy='1' /> 
+      <feColorMatrix result='matrixOut' in='offOut' type='matrix' 
+      values='0.1 0 0 0 0 0 0.1 0 0 0 0 0 0.1 0 0 0 0 0 0.3 0' /> 
+      <feGaussianBlur result='blurOut' in='matrixOut' stdDeviation='3' /> 
+      <feBlend in='SourceGraphic' in2='blurOut' mode='normal' /> 
+    </filter> 
+  <filter id='fkShadow' height='130%'> 
+    <feGaussianBlur in='SourceAlpha' stdDeviation='1.5'/> <!-- stdDeviation is how much to blur -->
+    <feOffset dx='1.2' dy='1.2' result='offsetblur'/> <!-- how much to offset -->
+    <feMerge>
+    <feMergeNode/> <!-- this contains the offset blurred image -->
+    <feMergeNode in='SourceGraphic'/> <!-- this contains the element that the filter is applied to -->
+    </feMerge>
+  </filter>
+  <radialGradient id='legendGradient' fx='5%' fy='5%' r='75%' spreadMethod='pad'>
+          <stop offset='0%' stop-color='#eefbf2' stop-opacity='1'/> 
+          <stop offset='100%' stop-color='#cff9cb' stop-opacity='1' /> 
+   </radialGradient>
+  <symbol id='calloutArrowDown' overflow='visible' >
+      <path d='M 0,0 L 8,12 L 16,0 z' style='fill:#f8f6d1;stroke:none; filter: url(#shadow);' />
+      <path d='M 0,0 L 8,12 L 16,0' style='stroke:#bebdbd; stroke-width:0.5;' />
+  </symbol>
+  <symbol id='calloutArrowUp' overflow='visible' >
+      <path d='M 0,16 L 8,4 L 16,16 z' style='fill:#ffffff; stroke:none; filter: url(#shadow);' />
+      <path d='M 0,16 L 8,4 L 16,16' style='stroke:#bebdbd; stroke-width:0.5;' />
+  </symbol>
+  <symbol id='pk' overflow='visible' >
+    <g transform='scale(0.99)'>
+     <path style='fill:#fffa7d;stroke:#765f03;stroke-width:0.6;stroke-linecap:round;stroke-linejoin:round;'
+        d='M 9.3678877,3.5695485 C 9.1030218,3.2729386 9.0796382,2.7628519 9.3396185,2.4517097 9.5449651,2.1956495 9.9040386,2.0980533 10.199638,2.2169415 10.533525,2.3415459 10.775153,2.706942 10.750675,3.0842709 10.737029,3.3980003 10.541153,3.699122 10.258248,3.8066067 9.966649,3.9250429 9.6169668,3.8418805 9.4008073,3.6062324 9.3894892,3.5943518 9.3785264,3.582104 9.3678886,3.5695487 z M 11.226617,6.9916004 C 11.888137,6.3548946 12.293488,5.4172188 12.311087,4.442353 12.378144,2.7379364 11.248678,1.0541269 9.7322318,0.44767357 8.3887112,-0.1280313 6.7865012,0.26822889 5.8918395,1.4007929 5.080823,2.3839145 4.9336815,3.8452096 5.3635544,5.101615 L 4.3670905,5.315913 C 4.0664984,5.3682645 4.0967703,5.6316724 4.2574957,5.8208829 L 4.9124,6.5655244 4.1543436,7.2512357 3.2136002,7.2163506 3.1674775,8.5586827 2.0406832,8.5086512 1.5965306,8.9299953 1.5471661,10.179833 0.75616674,10.195223 0.2112857,10.758575 0.15354288,11.735988 0.07199052,12.765553 c 0.36440953,0.238225 0.79006967,0.195492 1.44938278,-0.02675 L 6.3033562,8.1282037 6.8217102,8.6765688 C 6.9985465,8.8799427 7.3003699,8.7497574 7.358381,8.5016252 L 7.4938877,7.5084164 c 0.8537488,0.3985387 1.8303125,0.4711541 2.6851793,0.1427713 0.393927,-0.1407258 0.746858,-0.3701772 1.04755,-0.6595873 z'/>
+     <path d='M 6.8014948,6.3102123 0.15369063,13.024481 0.21560535,12.141962 6.0062342,6.2683782 z'
+        style='fill:#ffe5a5;fill-opacity:1;stroke:#854e31;stroke-width:0.06912433;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:3.00300009'/>
+    </g>
+  </symbol>
+  <symbol id='unq' overflow='visible' >
+    <g transform='scale(0.99)'>
+      <rect style='fill:#fbea8e;stroke:#7e4d31;stroke-width:0.71934468;stroke-linecap:round;stroke-linejoin:round;'
+         width='2.29' height='8.43' x='7.48' y='-0.76' ry='1.14' transform='matrix(0.701,0.713,-0.727,0.685,0,0)' />
+      <path style='fill:white;stroke:#858585;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;'
+         d='m 26.04,8.64 a 4.13,4.13 0 1 1 -8.26,0 4.13,4.13 0 1 1 8.26,0 z'
+         transform='matrix(1.025,0,0,0.987,-14.690,-3.862)' />
+      <text x='5.8' y='7.4' style='font-size:7px;fill:#8a8a8a;'>1</text>
+    </g>
+  </symbol>
+  <symbol id='idx' overflow='visible' >
+    <g transform='scale(0.99)'>
+      <rect style='fill:#fbea8e;stroke:#7e4d31;stroke-width:0.71934468;stroke-linecap:round;stroke-linejoin:round;'
+         width='2.29' height='8.43' x='7.48' y='-0.76' ry='1.14' transform='matrix(0.701,0.713,-0.727,0.685,0,0)' />
+      <path style='fill:white;stroke:#858585;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;'
+         d='m 26.04,8.64 a 4.13,4.13 0 1 1 -8.26,0 4.13,4.13 0 1 1 8.26,0 z'
+         transform='matrix(1.025,0,0,0.987,-14.690,-3.862)' />
+    </g>
+  </symbol>
+  <symbol id='fk' overflow='visible' >
+    <g transform='scale(0.87)'>
+      <path style='fill:#f3e1b7;stroke:#7e471f;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+      d='M 12.48,0.33 7.07,0.89 9.067,2.974 0.329,11.731 1.073,12.597 9.811,3.841 11.77,5.78 z' />
+    </g>
+  </symbol>
+  <symbol id='ref' overflow='visible' >
+    <g transform='scale(0.87)'>
+      <path style='fill:#f3e1b7;stroke:#7e471f;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+          d='M 0.10,12.70 5.31,12.15 3.40,10.06 11.82,1.32 11.11,0.45 2.68,9.19 0.80,7.24 z'/>
+    </g>
+  </symbol>
+  <symbol id='flag0' overflow='visible' >
+    <g transform='scale(0.92)'>
+      <path style='fill:#b7d0f6;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+          d='M 0.12,12.67 0.16,7.22 C 2.59,7.22 4.13,8.78 9.22,4.22 5.68,4.98 2.53,4.50 0.09,1.80 z'/>
+    </g>
+  </symbol>
+  <symbol id='flag1' overflow='visible' >
+    <g transform='scale(0.92)'>
+      <path style='fill:#f4a393;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+          d='M 0.12,12.67 0.16,7.22 C 2.59,7.22 4.13,8.78 9.22,4.22 5.68,4.98 2.53,4.50 0.09,1.80 z'/>
+    </g>
+  </symbol>
+  <symbol id='flag2' overflow='visible' >
+    <g transform='scale(0.92)'>
+      <path style='fill:#77ec8b;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+          d='M 0.12,12.67 0.16,7.22 C 2.59,7.22 4.13,8.78 9.22,4.22 5.68,4.98 2.53,4.50 0.09,1.80 z'/>
+    </g>
+  </symbol>
+  <symbol id='nn' overflow='visible' >
+  <path style='stroke:#9b3e50;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+          d='M 0,0 3,3 M 0,3 3,0 z'/>
+  </symbol>
+  <symbol id='view' overflow='visible' >
+    <g transform='scale(0.99)'>
+     <line x1='12' y1='6' x2='19' y2='0' stroke='black' stroke-width='0.5' />
+     <line x1='0' y1='6' x2='7' y2='0' stroke='black' stroke-width='0.5' />
+     <circle cx='3' cy='6' r='3' fill='#f9ebbc' stroke='black' stroke-width='0.5'/>
+     <circle cx='10' cy='6' r='3' fill='#f9ebbc' stroke='black' stroke-width='0.5'/>
+    </g>
+  </symbol>
+  <marker id='arrow01' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerUnits='strokeWidth' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 8.000,4.000 L 16.000,4.000 L 8.000,0.000 L 16.000,4.000 L 8.000,8.000' />
+  </marker>
+  <marker id='arrow1' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerUnits='strokeWidth' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 8.000,4.000 L 16.000,4.000 L 8.000,0.000 L 16.000,4.000 L 8.000,8.000' />
+  </marker>
+  <marker id='foot01' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerUnits='strokeWidth' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 0.00,4.00 L 16.00,4.00 z' />
+    <circle cx='12.00' cy='4.00' r='2.67' style='fill:white;stroke:#5e554d;' />
+    <path d='M 4.00,0.00 L 4.00, 8.00 z' />
+  </marker>
+  <marker id='foot0p' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerUnits='strokeWidth' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 0.00,4.00 L 16.00,4.00 z' />
+    <circle cx='12.00' cy='4.00' r='2.67' style='fill:white;stroke:#5e554d;' />
+    <path d='M 0.00,0.00 L 8.00,4.00 L 0.00,8.00' />
+  </marker>
+  <marker id='foot1' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerUnits='strokeWidth' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 0.00,4.00 L 16.00,4.00 z' />
+    <path d='M 8.00,0.00 L 8.00, 8.00 z' />
+    <path d='M 4.00,0.00 L 4.00, 8.00 z' />
+  </marker>
+  <marker id='foot1p' viewBox='0 0 16.00 8.00' refX='8.00' refY='4.00' markerUnits='strokeWidth' markerWidth='16.00' markerHeight='8.00' orient='auto'>
+    <path d='M 0.00,4.00 L 16.00,4.00 z' />
+    <path d='M 8.00,0.00 L 8.00, 8.00 z' />
+    <path d='M 0.00,0.00 L 8.00,4.00 L 0.00,8.00' />
+  </marker>
+  <linearGradient id='tbg_bfd4f5' x1='0%' y1='0%' x2='0%' y2='100%' >
+     <stop offset='0%' stop-color='#f9fafc' /> 
+     <stop offset='100%' stop-color='#c8daf5' /> 
+  </linearGradient>
+  <linearGradient id='tbg_c8f5bf' x1='0%' y1='0%' x2='0%' y2='100%' >
+     <stop offset='0%' stop-color='#fafcf9' /> 
+     <stop offset='100%' stop-color='#d0f5c8' /> 
+  </linearGradient>
+</defs>
+
+<!-- ============= Desktop ============= -->
+<rect x='1' y='1' width='686' height='668' rx='8' ry='8' style='fill:url(#layoutBgB); stroke:#333333; stroke-width:0.5;' />
+<rect x='1' y='1' width='686' height='668' rx='8' ry='8' style='fill:url(#layoutBgTr);' />
+<rect x='1' y='1' width='686' height='668' rx='8' ry='8' style='fill:url(#layoutBgA); stroke:#333333; stroke-width:0.5;' />
+
+<!-- ============= Legend ============= -->
+<g transform='translate(10,10)'>
+  <rect x='10' y='10' width='330' height='52' rx='6' ry='6' style='fill:url(#legendGradient);filter:url(#shadow);'/> 
+  <text x='65' y='33'>Schema</text> 
+  <text x='65' y='49' style='fill:#aaaaaa; font-size:11px;'><tspan>Read table &amp; column comments as mouse-over tooltips.</tspan></text> 
+<g transform="scale(0.75,0.75) translate(10,7)" > <a xlink:href='http://www.dbschema.com'> <rect style="fill:#eb7f2c;stroke:none;shape-rendering:geometricPrecision;" width="13.27" height="11.26" x="40.04" y="59.44" ry="3.14" transform="matrix(0.90187511,-0.43199686,0,1,0,0)" /> <rect style="fill:#2c49eb;stroke:none;shape-rendering:geometricPrecision;" width="13.27" height="11.26" x="54.83" y="59.57" ry="3.14" transform="matrix(0.90187511,-0.43199686,0,1,0,0)" /> <rect style="fill:#2c49eb;stroke:none;shape-rendering:geometricPrecision;" width="13.27" height="11.26" x="40.35" y="71.62" ry="3.14" transform="matrix(0.90187511,-0.43199686,0,1,0,0)" /> <rect style="fill:#2c49eb;stroke:none;shape-rendering:geometricPrecision;" width="13.27" height="11.26" x="54.68" y="71.75" ry="3.14" transform="matrix(0.90187511,-0.43199686,0,1,0,0)" /> <rect style="fill:#2c49eb;stroke:none;shape-rendering:geometricPrecision;" width="13.35" height="11.20" x="13.48" y="19.67" ry="3.12" transform="matrix(0.84723158,0.53122372,0,1,0,0)" /> <rect style="fill:#eb7f2c;stroke:none;shape-rendering:geometricPrecision;" width="13.35" height="11.20" x="28.36" y="19.80" ry="3.12" transform="matrix(0.84723158,0.53122372,0,1,0,0)" /> <rect style="fill:#2c49eb;stroke:none;shape-rendering:geometricPrecision;" width="13.35" height="11.20" x="13.79" y="31.78" ry="3.12" transform="matrix(0.84723158,0.53122372,0,1,0,0)" /> <rect style="fill:#2c49eb;stroke:none;shape-rendering:geometricPrecision;" width="13.35" height="11.20" x="28.21" y="31.92" ry="3.12" transform="matrix(0.84723158,0.53122372,0,1,0,0)" /> <rect style="fill:#2c49eb;stroke:none;shape-rendering:geometricPrecision;" width="13.49" height="14.24" x="34.59" y="-9.62" ry="3.97" transform="matrix(0.85815392,0.51339249,-0.91732703,0.39813455,0,0)" /> <rect style="fill:#2c49eb;stroke:none;shape-rendering:geometricPrecision;" width="13.49" height="14.24" x="49.63" y="-9.46" ry="3.97" transform="matrix(0.85815392,0.51339249,-0.91732703,0.39813455,0,0)" /> <rect style="fill:#2c49eb;stroke:none;shape-rendering:geometricPrecision;" width="13.49" height="14.24" x="34.90" y="5.77"  ry="3.97" transform="matrix(0.85815392,0.51339249,-0.91732703,0.39813455,0,0)" /> <rect style="fill:#eb7f2c;stroke:none;shape-rendering:geometricPrecision;" width="13.49" height="14.24" x="49.47" y="5.93"  ry="3.97" transform="matrix(0.85815392,0.51339249,-0.91732703,0.39813455,0,0)" /> <title>Generated using DbSchema - www.dbschema.com</title> </a></g>
+</g>
+
+<g transform='translate(0,110)'>
+<!-- ============= Fk 'reviews_reviews_product_id_foreign' ============= -->
+<path id='reviews_reviews_product_id_foreign'  onmouseover="hghl(['reviews_reviews_product_id_foreign','db_lock_poc.reviews.product_id','db_lock_poc.products.id'])" onmouseout="uhghl(['reviews_reviews_product_id_foreign','db_lock_poc.reviews.product_id','db_lock_poc.products.id'])" transform='translate(8,0)' class='scene' d='M 160 224 L 184,224 Q 192,224 192,216 L 192,200 Q 192,192 200,192 L 208,192' >
+	<title>Fk reviews_product_id_foreign
+reviews ref products ( product_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#foot1p)' marker-end='url(#arrow1)'    d='M 160 224 L 184,224 Q 192,224 192,216 L 192,200 Q 192,192 200,192 L 208,192' ></path>
+<text x='169' y='219' transform='rotate(0 169,219)' title='Fk reviews_product_id_foreign
+reviews ref products ( product_id -&gt; id )' class='relName'>product_id</text>
+<!-- ============= Fk 'reviews_reviews_user_id_foreign' ============= -->
+<path id='reviews_reviews_user_id_foreign'  onmouseover="hghl(['reviews_reviews_user_id_foreign','db_lock_poc.reviews.user_id','db_lock_poc.users.id'])" onmouseout="uhghl(['reviews_reviews_user_id_foreign','db_lock_poc.reviews.user_id','db_lock_poc.users.id'])" transform='translate(8,0)' class='scene' d='M 160 208 L 168,208 Q 176,208 176,200 L 176,136 Q 176,128 184,128 L 392,128 Q 400,128 400,136 L 400,184 Q 400,192 408,192 L 416,192' >
+	<title>Fk reviews_user_id_foreign
+reviews ref users ( user_id -&gt; id )</title>
+</path>
+<path transform='translate(8,0)' marker-start='url(#foot1p)' marker-end='url(#arrow1)'    d='M 160 208 L 168,208 Q 176,208 176,200 L 176,136 Q 176,128 184,128 L 392,128 Q 400,128 400,136 L 400,184 Q 400,192 408,192 L 416,192' ></path>
+<text x='169' y='203' transform='rotate(0 169,203)' title='Fk reviews_user_id_foreign
+reviews ref users ( user_id -&gt; id )' class='relName'>user_id</text>
+<!-- ============= Table 'migrations' ============= -->
+<rect class='table' x='224' y='408' width='96' height='96' rx='8' ry='8' style='fill:url(#tbg_bfd4f5);'/>
+<line style='stroke:#d8b6b6;stroke-width:1;shape-rendering:crispEdges;' x1='224.00' y1='436.00' x2='320.00' y2='436.00'/>
+<line class='delim' x1='224.000000' y1='436.000000' x2='320.000000' y2='436.000000' style='stroke:#b6c3d8'/>
+<line class='delim' x1='240.000000' y1='436.000000' x2='240.000000' y2='504.000000' style='stroke:#b6c3d8'/>
+<line class='delim' x1='308.000000' y1='436.000000' x2='308.000000' y2='504.000000' style='stroke:#b6c3d8'/>
+<a xlink:href='#migrations'><text x='240' y='428'>migrations</text><title>Table db_lock_poc.migrations</title></a>
+  <use id='nn' x='226' y='445' xlink:href='#nn'/><a xlink:href='#migrations.id'><use id='pk' x='226' y='444' xlink:href='#pk'/><title>Pk pk_migrations ( id ) </title></a>
+<a xlink:href='#migrations.id'><text id='db_lock_poc.migrations.id' x='243' y='455'>id</text><title>id
+* int</title></a>
+  <use id='nn' x='226' y='461' xlink:href='#nn'/><a xlink:href='#migrations.migration'><text id='db_lock_poc.migrations.migration' x='243' y='471'>migration</text><title>migration
+* varchar(255)</title></a>
+  <use id='nn' x='226' y='477' xlink:href='#nn'/><a xlink:href='#migrations.batch'><text id='db_lock_poc.migrations.batch' x='243' y='487'>batch</text><title>batch
+* int</title></a>
+
+<!-- ============= Table 'password_resets' ============= -->
+<rect class='table' x='48' y='408' width='112' height='96' rx='8' ry='8' style='fill:url(#tbg_bfd4f5);'/>
+<line style='stroke:#d8b6b6;stroke-width:1;shape-rendering:crispEdges;' x1='48.00' y1='436.00' x2='160.00' y2='436.00'/>
+<line class='delim' x1='48.000000' y1='436.000000' x2='160.000000' y2='436.000000' style='stroke:#b6c3d8'/>
+<line class='delim' x1='64.000000' y1='436.000000' x2='64.000000' y2='504.000000' style='stroke:#b6c3d8'/>
+<line class='delim' x1='148.000000' y1='436.000000' x2='148.000000' y2='504.000000' style='stroke:#b6c3d8'/>
+<a xlink:href='#password_resets'><text x='55' y='428'>password_resets</text><title>Table db_lock_poc.password_resets</title></a>
+  <use id='nn' x='50' y='445' xlink:href='#nn'/><a xlink:href='#password_resets.email'><use id='idx' x='50' y='444' xlink:href='#idx'/><title>password_resets_email_index ( email ) </title></a>
+<a xlink:href='#password_resets.email'><text id='db_lock_poc.password_resets.email' x='67' y='455'>email</text><title>email
+* varchar(255)</title></a>
+  <use id='nn' x='50' y='461' xlink:href='#nn'/><a xlink:href='#password_resets.token'><text id='db_lock_poc.password_resets.token' x='67' y='471'>token</text><title>token
+* varchar(255)</title></a>
+  <a xlink:href='#password_resets.created_at'><text id='db_lock_poc.password_resets.created_at' x='67' y='487'>created_at</text><title>created_at
+timestamp</title></a>
+
+<!-- ============= Table 'products' ============= -->
+<rect class='table' x='224' y='152' width='112' height='192' rx='8' ry='8' style='fill:url(#tbg_bfd4f5);'/>
+<line style='stroke:#d8b6b6;stroke-width:1;shape-rendering:crispEdges;' x1='224.00' y1='180.00' x2='336.00' y2='180.00'/>
+<line class='delim' x1='224.000000' y1='180.000000' x2='336.000000' y2='180.000000' style='stroke:#b6c3d8'/>
+<line class='delim' x1='240.000000' y1='180.000000' x2='240.000000' y2='344.000000' style='stroke:#b6c3d8'/>
+<line class='delim' x1='324.000000' y1='180.000000' x2='324.000000' y2='344.000000' style='stroke:#b6c3d8'/>
+<a xlink:href='#products'><text x='252' y='172'>products</text><title>Table db_lock_poc.products</title></a>
+  <use id='nn' x='226' y='189' xlink:href='#nn'/><a xlink:href='#products.id'><use id='pk' x='226' y='188' xlink:href='#pk'/><title>Pk pk_products ( id ) </title></a>
+<a xlink:href='#products.id'><text id='db_lock_poc.products.id' x='243' y='199' onmouseover="hghl(['reviews_reviews_product_id_foreign'])" onmouseout="uhghl(['reviews_reviews_product_id_foreign'])">id</text><title>id
+* int</title></a>
+<a xlink:href='#products.id'><use id='ref' x='324' y='188' xlink:href='#ref'/><title>Referred by reviews ( product_id -&gt; id ) </title></a>
+  <use id='nn' x='226' y='205' xlink:href='#nn'/><a xlink:href='#products.title'><text id='db_lock_poc.products.title' x='243' y='215'>title</text><title>title
+* varchar(255)
+상품명</title></a>
+  <use id='nn' x='226' y='221' xlink:href='#nn'/><a xlink:href='#products.stock'><text id='db_lock_poc.products.stock' x='243' y='231'>stock</text><title>stock
+* int default 0
+재고수량</title></a>
+  <use id='nn' x='226' y='237' xlink:href='#nn'/><a xlink:href='#products.price'><text id='db_lock_poc.products.price' x='243' y='247'>price</text><title>price
+* int default 0
+가격</title></a>
+  <a xlink:href='#products.description'><text id='db_lock_poc.products.description' x='243' y='263'>description</text><title>description
+text
+상품 설명</title></a>
+  <use id='nn' x='226' y='269' xlink:href='#nn'/><a xlink:href='#products.version'><text id='db_lock_poc.products.version' x='243' y='279'>version</text><title>version
+* int default 1
+레코드 버전</title></a>
+  <a xlink:href='#products.deleted_at'><text id='db_lock_poc.products.deleted_at' x='243' y='295'>deleted_at</text><title>deleted_at
+timestamp</title></a>
+  <a xlink:href='#products.created_at'><text id='db_lock_poc.products.created_at' x='243' y='311'>created_at</text><title>created_at
+timestamp</title></a>
+  <a xlink:href='#products.updated_at'><text id='db_lock_poc.products.updated_at' x='243' y='327'>updated_at</text><title>updated_at
+timestamp</title></a>
+
+<!-- ============= Table 'reviews' ============= -->
+<rect class='table' x='48' y='152' width='112' height='192' rx='8' ry='8' style='fill:url(#tbg_bfd4f5);'/>
+<line style='stroke:#d8b6b6;stroke-width:1;shape-rendering:crispEdges;' x1='48.00' y1='180.00' x2='160.00' y2='180.00'/>
+<line class='delim' x1='48.000000' y1='180.000000' x2='160.000000' y2='180.000000' style='stroke:#b6c3d8'/>
+<line class='delim' x1='64.000000' y1='180.000000' x2='64.000000' y2='344.000000' style='stroke:#b6c3d8'/>
+<line class='delim' x1='148.000000' y1='180.000000' x2='148.000000' y2='344.000000' style='stroke:#b6c3d8'/>
+<a xlink:href='#reviews'><text x='79' y='172'>reviews</text><title>Table db_lock_poc.reviews</title></a>
+  <use id='nn' x='50' y='189' xlink:href='#nn'/><a xlink:href='#reviews.id'><use id='pk' x='50' y='188' xlink:href='#pk'/><title>Pk pk_reviews ( id ) </title></a>
+<a xlink:href='#reviews.id'><text id='db_lock_poc.reviews.id' x='67' y='199'>id</text><title>id
+* int</title></a>
+  <use id='nn' x='50' y='205' xlink:href='#nn'/><a xlink:href='#reviews.user_id'><use id='idx' x='50' y='204' xlink:href='#idx'/><title>reviews_user_id_index ( user_id ) </title></a>
+<a xlink:href='#reviews.user_id'><text id='db_lock_poc.reviews.user_id' x='67' y='215' onmouseover="hghl(['reviews_reviews_user_id_foreign'])" onmouseout="uhghl(['reviews_reviews_user_id_foreign'])">user_id</text><title>user_id
+* int
+작성자</title></a>
+<a xlink:href='#reviews.user_id'><use id='fk' x='148' y='204' xlink:href='#fk'/><title>References users ( user_id -&gt; id ) </title></a>
+  <use id='nn' x='50' y='221' xlink:href='#nn'/><a xlink:href='#reviews.product_id'><use id='idx' x='50' y='220' xlink:href='#idx'/><title>reviews_product_id_index ( product_id ) </title></a>
+<a xlink:href='#reviews.product_id'><text id='db_lock_poc.reviews.product_id' x='67' y='231' onmouseover="hghl(['reviews_reviews_product_id_foreign'])" onmouseout="uhghl(['reviews_reviews_product_id_foreign'])">product_id</text><title>product_id
+* int
+상품</title></a>
+<a xlink:href='#reviews.product_id'><use id='fk' x='148' y='220' xlink:href='#fk'/><title>References products ( product_id -&gt; id ) </title></a>
+  <use id='nn' x='50' y='237' xlink:href='#nn'/><a xlink:href='#reviews.title'><text id='db_lock_poc.reviews.title' x='67' y='247'>title</text><title>title
+* varchar(255)
+제목</title></a>
+  <use id='nn' x='50' y='253' xlink:href='#nn'/><a xlink:href='#reviews.content'><text id='db_lock_poc.reviews.content' x='67' y='263'>content</text><title>content
+* text
+본문</title></a>
+  <use id='nn' x='50' y='269' xlink:href='#nn'/><a xlink:href='#reviews.version'><text id='db_lock_poc.reviews.version' x='67' y='279'>version</text><title>version
+* int default 1
+레코드 버전</title></a>
+  <a xlink:href='#reviews.deleted_at'><text id='db_lock_poc.reviews.deleted_at' x='67' y='295'>deleted_at</text><title>deleted_at
+timestamp</title></a>
+  <a xlink:href='#reviews.created_at'><text id='db_lock_poc.reviews.created_at' x='67' y='311'>created_at</text><title>created_at
+timestamp</title></a>
+  <a xlink:href='#reviews.updated_at'><text id='db_lock_poc.reviews.updated_at' x='67' y='327'>updated_at</text><title>updated_at
+timestamp</title></a>
+
+<!-- ============= Table 'users' ============= -->
+<rect class='table' x='432' y='152' width='144' height='160' rx='8' ry='8' style='fill:url(#tbg_c8f5bf);'/>
+<line style='stroke:#d8b6b6;stroke-width:1;shape-rendering:crispEdges;' x1='432.00' y1='180.00' x2='576.00' y2='180.00'/>
+<line class='delim' x1='432.000000' y1='180.000000' x2='576.000000' y2='180.000000' style='stroke:#bcd8b6'/>
+<line class='delim' x1='448.000000' y1='180.000000' x2='448.000000' y2='312.000000' style='stroke:#bcd8b6'/>
+<line class='delim' x1='564.000000' y1='180.000000' x2='564.000000' y2='312.000000' style='stroke:#bcd8b6'/>
+<a xlink:href='#users'><text x='485' y='172'>users</text><title>Table db_lock_poc.users</title></a>
+  <use id='nn' x='434' y='189' xlink:href='#nn'/><a xlink:href='#users.id'><use id='pk' x='434' y='188' xlink:href='#pk'/><title>Pk pk_users ( id ) </title></a>
+<a xlink:href='#users.id'><text id='db_lock_poc.users.id' x='451' y='199' onmouseover="hghl(['reviews_reviews_user_id_foreign'])" onmouseout="uhghl(['reviews_reviews_user_id_foreign'])">id</text><title>id
+* int</title></a>
+<a xlink:href='#users.id'><use id='ref' x='564' y='188' xlink:href='#ref'/><title>Referred by reviews ( user_id -&gt; id ) </title></a>
+  <use id='nn' x='434' y='205' xlink:href='#nn'/><a xlink:href='#users.name'><text id='db_lock_poc.users.name' x='451' y='215'>name</text><title>name
+* varchar(255)</title></a>
+  <use id='nn' x='434' y='221' xlink:href='#nn'/><a xlink:href='#users.email'><use id='unq' x='434' y='220' xlink:href='#unq'/><title>Unq users_email_unique ( email ) </title></a>
+<a xlink:href='#users.email'><text id='db_lock_poc.users.email' x='451' y='231'>email</text><title>email
+* varchar(255)</title></a>
+  <use id='nn' x='434' y='237' xlink:href='#nn'/><a xlink:href='#users.password'><text id='db_lock_poc.users.password' x='451' y='247'>password</text><title>password
+* varchar(255)</title></a>
+  <a xlink:href='#users.remember_token'><text id='db_lock_poc.users.remember_token' x='451' y='263'>remember_token</text><title>remember_token
+varchar(100)</title></a>
+  <a xlink:href='#users.created_at'><text id='db_lock_poc.users.created_at' x='451' y='279'>created_at</text><title>created_at
+timestamp</title></a>
+  <a xlink:href='#users.updated_at'><text id='db_lock_poc.users.updated_at' x='451' y='295'>updated_at</text><title>updated_at
+timestamp</title></a>
+
+<!-- ============= Callout ============= -->
+<rect class='callout' x='48' y='32' width='608' height='117' rx='16' ry='16'  />
+<text x='72' y='32' class='callout'>
+    <tspan x='52' dx='8' dy='16.80'>Use the Relational Data Browse for exploring data from multiple tables at a time&#46;</tspan>
+    <tspan x='52' dx='8' dy='16.80'>Tables should be bind by foreign keys &#45; if they are not you can create VIRTUAL foreign keys in the layout&#46; </tspan>
+    <tspan x='52' dx='8' dy='16.80'>Virtual foreign keys will be saved to project file&#46;</tspan>
+    <tspan x='52' dx='8' dy='16.80'> </tspan>
+    <tspan x='52' dx='8' dy='16.80'>Descend into children tables by pressing the foreign key arrow icon near title&#46;</tspan>
+    <tspan x='52' dx='8' dy='16.80'>Right&#45;click column headers in browse tables to set filters&#46;</tspan>
+</text>
+</g></svg></div>
+
+
+<br/><br/>
+<div class='section-header'><a name='migrations'><h2>Table migrations</h2></a></div>
+<table class='bordered'>
+<thead>
+<tr><th colspan='4'>Columns</a></th></tr>
+</thead>
+<tbody>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#pk'/></svg></td>
+		<td><a name='migrations.id'>id</a></td>
+		<td> int UNSIGNED  AUTOINCREMENT  </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='migrations.migration'>migration</a></td>
+		<td> varchar&#40; 255 &#41;   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='migrations.batch'>batch</a></td>
+		<td> int   </td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Indexes</th></tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#pk'/></svg></td><td>pk&#95;migrations</td>
+		<td> ON id</td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table>
+
+<br/><br/>
+<div class='section-header'><a name='password_resets'><h2>Table password_resets</h2></a></div>
+<table class='bordered'>
+<thead>
+<tr><th colspan='4'>Columns</a></th></tr>
+</thead>
+<tbody>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#idx'/></svg></td>
+		<td><a name='password_resets.email'>email</a></td>
+		<td> varchar&#40; 255 &#41;   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='password_resets.token'>token</a></td>
+		<td> varchar&#40; 255 &#41;   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><a name='password_resets.created_at'>created&#95;at</a></td>
+		<td> timestamp   </td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Indexes</th></tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#idx'/></svg></td><td>password&#95;resets&#95;email&#95;index</td>
+		<td> ON email</td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table>
+
+<br/><br/>
+<div class='section-header'><a name='products'><h2>Table products</h2></a></div>
+<table class='bordered'>
+<thead>
+<tr><th colspan='4'>Columns</a></th></tr>
+</thead>
+<tbody>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#pk'/></svg><svg width='14' height='14'><use xlink:href='#ref'/></svg></td>
+		<td><a name='products.id'>id</a></td>
+		<td> int UNSIGNED  AUTOINCREMENT  </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='products.title'>title</a></td>
+		<td> varchar&#40; 255 &#41;   </td>
+		<td> 상품명 </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='products.stock'>stock</a></td>
+		<td> int UNSIGNED   DEFAULT 0 </td>
+		<td> 재고수량 </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='products.price'>price</a></td>
+		<td> int UNSIGNED   DEFAULT 0 </td>
+		<td> 가격 </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><a name='products.description'>description</a></td>
+		<td> text   </td>
+		<td> 상품 설명 </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='products.version'>version</a></td>
+		<td> int UNSIGNED   DEFAULT 1 </td>
+		<td> 레코드 버전 </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><a name='products.deleted_at'>deleted&#95;at</a></td>
+		<td> timestamp   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><a name='products.created_at'>created&#95;at</a></td>
+		<td> timestamp   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><a name='products.updated_at'>updated&#95;at</a></td>
+		<td> timestamp   </td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Indexes</th></tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#pk'/></svg></td><td>pk&#95;products</td>
+		<td> ON id</td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table>
+
+<br/><br/>
+<div class='section-header'><a name='reviews'><h2>Table reviews</h2></a></div>
+<table class='bordered'>
+<thead>
+<tr><th colspan='4'>Columns</a></th></tr>
+</thead>
+<tbody>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#pk'/></svg></td>
+		<td><a name='reviews.id'>id</a></td>
+		<td> int UNSIGNED  AUTOINCREMENT  </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#idx'/></svg><svg width='14' height='14'><use xlink:href='#fk'/></svg></td>
+		<td><a name='reviews.user_id'>user&#95;id</a></td>
+		<td> int UNSIGNED   </td>
+		<td> 작성자 </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#idx'/></svg><svg width='14' height='14'><use xlink:href='#fk'/></svg></td>
+		<td><a name='reviews.product_id'>product&#95;id</a></td>
+		<td> int UNSIGNED   </td>
+		<td> 상품 </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='reviews.title'>title</a></td>
+		<td> varchar&#40; 255 &#41;   </td>
+		<td> 제목 </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='reviews.content'>content</a></td>
+		<td> text   </td>
+		<td> 본문 </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='reviews.version'>version</a></td>
+		<td> int UNSIGNED   DEFAULT 1 </td>
+		<td> 레코드 버전 </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><a name='reviews.deleted_at'>deleted&#95;at</a></td>
+		<td> timestamp   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><a name='reviews.created_at'>created&#95;at</a></td>
+		<td> timestamp   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><a name='reviews.updated_at'>updated&#95;at</a></td>
+		<td> timestamp   </td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Indexes</th></tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#pk'/></svg></td><td>pk&#95;reviews</td>
+		<td> ON id</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#idx'/></svg></td><td>reviews&#95;product&#95;id&#95;index</td>
+		<td> ON product&#95;id</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#idx'/></svg></td><td>reviews&#95;user&#95;id&#95;index</td>
+		<td> ON user&#95;id</td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Foreign Keys</th></tr>
+	<tr>
+		<td><svg width='14' height='14'><use xlink:href='#fk'/></svg></td><td>reviews_product_id_foreign</td>
+		<td > ( product&#95;id ) ref <a href='#products'>products</a> (id) </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td><svg width='14' height='14'><use xlink:href='#fk'/></svg></td><td>reviews_user_id_foreign</td>
+		<td > ( user&#95;id ) ref <a href='#users'>users</a> (id) </td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table>
+
+<br/><br/>
+<div class='section-header'><a name='users'><h2>Table users</h2></a></div>
+<table class='bordered'>
+<thead>
+<tr><th colspan='4'>Columns</a></th></tr>
+</thead>
+<tbody>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#pk'/></svg><svg width='14' height='14'><use xlink:href='#ref'/></svg></td>
+		<td><a name='users.id'>id</a></td>
+		<td> int UNSIGNED  AUTOINCREMENT  </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='users.name'>name</a></td>
+		<td> varchar&#40; 255 &#41;   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#unq'/></svg></td>
+		<td><a name='users.email'>email</a></td>
+		<td> varchar&#40; 255 &#41;   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='users.password'>password</a></td>
+		<td> varchar&#40; 255 &#41;   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><a name='users.remember_token'>remember&#95;token</a></td>
+		<td> varchar&#40; 100 &#41;   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><a name='users.created_at'>created&#95;at</a></td>
+		<td> timestamp   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><a name='users.updated_at'>updated&#95;at</a></td>
+		<td> timestamp   </td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Indexes</th></tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#pk'/></svg></td><td>pk&#95;users</td>
+		<td> ON id</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#unq'/></svg></td><td>users&#95;email&#95;unique</td>
+		<td> ON email</td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table>
+
+<p align='right'><a href='http://www.dbschema.com' style='color:#aaa'>Powered by DbSchema</a></p></body></html>

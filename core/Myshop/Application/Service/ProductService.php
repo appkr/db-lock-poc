@@ -36,7 +36,11 @@ class ProductService
         $product->price = $dto->getPrice() ?: $product->price;
         $product->description = $dto->getDescription() ?: $product->description;
 
-        $this->productRepository->save($product);
+        // [비선점잠금]
+        $retrievedVersion = $product->version;
+        $product->version += 1;
+
+        $this->productRepository->save($product, $retrievedVersion);
 
         return $product->fresh();
     }
