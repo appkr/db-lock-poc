@@ -3,7 +3,7 @@
 use Illuminate\Database\Events\QueryExecuted;
 
 DB::listen(function (QueryExecuted $query) {
-    Log::debug($query->sql, $query->bindings);
+    Log::info($query->sql, $query->bindings);
 });
 
 Route::prefix('v1')->group(function () {

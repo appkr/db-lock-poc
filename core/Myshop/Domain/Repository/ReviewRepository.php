@@ -9,8 +9,9 @@ use Myshop\Domain\Model\Review;
 
 interface ReviewRepository
 {
-    public function findById(int $id) : Review;
-    public function findBySearchParam(Product $product, ReviewSearchParam $param) : LengthAwarePaginator;
+    public function findById(int $id, Product $product = null) : Review;
+    public function findByIdWithLock(int $id, Product $product = null) : Review;
+    public function findBySearchParam(ReviewSearchParam $param, Product $product = null) : LengthAwarePaginator;
     public function save(Review $review) : void;
-    public function delete(Review $review) : void;
+    public function delete(Review $review, Product $product = null) : void;
 }
