@@ -50,14 +50,18 @@ class ReviewController extends Controller
         UpdateReviewRequest $request, Product $product, int $reviewId
     ) {
         // [선점잠금] 레코드를 조회하고 잠급니다.
-        $review = $this->reviewRepository->findByIdWithLock($reviewId, $product);
+        // $review = $this->reviewRepository->findByIdWithLock($reviewId, $product);
 
         // [선점잠금] PoC를 위해 강제로 잠금을 연장합니다.
         // 선점한 프로세스 A가 끝나고 DB 잠금이 풀리면, 다음 프로세스 B를 처리합니다.
-        sleep(10);
+        // sleep(10);
+
+        // [비선점잠금]
+        // 조회시점 대비 DB의 버전이 같은지를 확인하여 변경 가능 여부를 판단합니다.
+        $review = $this->reviewRepository->findById($reviewId, $product);
 
         $review = $this->reviewService->modifyReview(
-            $review, $request->getReviewDto(), $product
+            $review, $request->getReviewDto()
         );
 
         return json()->withItem($review, new ReviewTransformer);

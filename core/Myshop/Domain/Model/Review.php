@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int id
+ * @property int product_id
+ * @property int user_id
  * @property string title
  * @property string content
+ * @property mixed version
  * @property User author
  * @property Product product
  */

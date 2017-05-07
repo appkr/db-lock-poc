@@ -14,6 +14,7 @@ class CreateProductsTable extends Migration
             $table->unsignedInteger('stock')->default(0)->comment('재고수량');
             $table->unsignedInteger('price')->default(0)->comment('가격');
             $table->text('description')->nullable()->comment('상품 설명');
+            $table->unsignedInteger('version')->default(1)->comment('레코드 버전');
             $table->softDeletes();
             $table->timestamps();
         });

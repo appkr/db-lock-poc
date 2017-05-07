@@ -10,6 +10,7 @@ use Myshop\Common\Dto\ProductSearchParam;
 use Myshop\Domain\Model\Product;
 use Myshop\Domain\Model\Review;
 use Myshop\Domain\Repository\ProductRepository;
+use Myshop\Infrastructure\Exception\OptimisticLockingFailureException;
 
 class EloquentProductRepository implements ProductRepository
 {
@@ -53,11 +54,12 @@ class EloquentProductRepository implements ProductRepository
             ->paginate($param->getSize(), ['*'], 'page', $param->getPage());
     }
 
-    public function save(Product $product) : void
+    public function save(Product $product, int $version = null) : void
     {
         DB::beginTransaction();
 
         try {
+            $this->checkVersionMatch($product, $version);
             $product->push();
             DB::commit();
         } catch (Exception $e) {
@@ -68,17 +70,22 @@ class EloquentProductRepository implements ProductRepository
 
     public function delete(Product $product) : void
     {
-        $reviewIds = $product->reviews->pluck('id')->toArray();
-
         DB::beginTransaction();
 
         try {
-            Review::destroy($reviewIds);
+            Review::destroy($product->reviews->pluck('id')->toArray());
             $product->delete();
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
+        }
+    }
+
+    private function checkVersionMatch(Product $product, int $version = null)
+    {
+        if ($version && $product->fresh()->version !== $version) {
+            throw new OptimisticLockingFailureException('데이터 버전이 일치하지 않습니다.');
         }
     }
 }

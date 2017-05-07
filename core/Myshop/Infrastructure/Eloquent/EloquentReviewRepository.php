@@ -11,6 +11,7 @@ use Myshop\Common\Dto\ReviewSearchParam;
 use Myshop\Domain\Model\Product;
 use Myshop\Domain\Model\Review;
 use Myshop\Domain\Repository\ReviewRepository;
+use Myshop\Infrastructure\Exception\OptimisticLockingFailureException;
 
 class EloquentReviewRepository implements ReviewRepository
 {
@@ -57,11 +58,12 @@ class EloquentReviewRepository implements ReviewRepository
             ->paginate($param->getSize(), ['*'], 'page', $param->getPage());
     }
 
-    public function save(Review $review) : void
+    public function save(Review $review, int $version = null) : void
     {
         DB::beginTransaction();
 
         try {
+            $this->checkVersionMatch($review, $version);
             $review->push();
             DB::commit();
         } catch (Exception $e) {
@@ -99,6 +101,13 @@ class EloquentReviewRepository implements ReviewRepository
 
         if ($associatedProduct->id !== $givenProduct->id) {
             throw new ModelNotFoundException;
+        }
+    }
+
+    private function checkVersionMatch(Review $review, int $version = null)
+    {
+        if ($version && $review->fresh()->version !== $version) {
+            throw new OptimisticLockingFailureException('데이터 버전이 일치하지 않습니다.');
         }
     }
 }

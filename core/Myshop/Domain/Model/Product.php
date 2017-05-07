@@ -13,6 +13,7 @@ use Myshop\Common\Model\Money;
  * @property int stock
  * @property Money price
  * @property string description
+ * @property mixed version
  * @property Collection reviews
  */
 class Product extends Model

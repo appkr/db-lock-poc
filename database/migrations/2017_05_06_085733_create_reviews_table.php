@@ -14,6 +14,7 @@ class CreateReviewsTable extends Migration
             $table->unsignedInteger('product_id')->index()->comment('상품');
             $table->string('title')->comment('제목');
             $table->text('content')->comment('본문');
+            $table->unsignedInteger('version')->default(1)->comment('레코드 버전');
             $table->softDeletes();
             $table->timestamps();
 

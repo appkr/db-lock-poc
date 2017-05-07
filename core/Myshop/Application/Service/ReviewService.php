@@ -37,7 +37,11 @@ class ReviewService
         $review->title = $dto->getTitle() ?: $review->title;
         $review->content = $dto->getContent() ?: $review->content;
 
-        $this->reviewRepository->save($review);
+        // [비선점잠금]
+        $retrievedVersion = $review->version;
+        $review->version += 1;
+
+        $this->reviewRepository->save($review, $retrievedVersion);
 
         return $review->fresh();
     }
