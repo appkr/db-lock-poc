@@ -9,10 +9,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int id
  * @property string title
  * @property string content
+ * @property User author
+ * @property Product product
  */
 class Review extends Model
 {
     use SoftDeletes;
+
+    protected $hidden = [
+        'deleted_at',
+    ];
 
     // RELATIONSHIPS
 

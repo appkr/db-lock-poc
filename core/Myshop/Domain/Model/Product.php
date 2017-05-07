@@ -4,15 +4,16 @@ namespace Myshop\Domain\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Myshop\Common\Model\Money;
 
 /**
  * @property int id
  * @property string title
  * @property int stock
- * @property \Myshop\Common\Model\Money price
+ * @property Money price
  * @property string description
- * @property mixed reviews
+ * @property Collection reviews
  */
 class Product extends Model
 {
@@ -20,6 +21,10 @@ class Product extends Model
 
     protected $with = [
         'reviews',
+    ];
+
+    protected $hidden = [
+        'deleted_at',
     ];
 
     // RELATIONSHIPS

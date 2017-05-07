@@ -6,6 +6,7 @@ use App\Http\Requests\Review\CreateReviewRequest;
 use App\Http\Requests\Review\DeleteReviewRequest;
 use App\Http\Requests\Review\ListReviewRequest;
 use App\Http\Requests\Review\UpdateReviewRequest;
+use App\Transformers\ReviewTransformer;
 use Myshop\Application\Service\ReviewService;
 use Myshop\Domain\Model\Product;
 use Myshop\Domain\Model\Review;
@@ -26,8 +27,13 @@ class ReviewController extends Controller
 
     public function index(ListReviewRequest $request, Product $product)
     {
-        return $this->reviewRepository->findBySearchParam(
+        $paginatedReviewCollection = $this->reviewRepository->findBySearchParam(
             $product, $request->getReviewSearchParam()
+        );
+
+        return json()->withPagination(
+            $paginatedReviewCollection,
+            new ReviewTransformer
         );
     }
 
@@ -37,7 +43,7 @@ class ReviewController extends Controller
             $product, $request->user(), $request->getReviewDto()
         );
 
-        return response()->json($review);
+        return json()->withItem($review, new ReviewTransformer);
     }
 
     public function update(
@@ -47,7 +53,7 @@ class ReviewController extends Controller
             $review, $request->getReviewDto()
         );
 
-        return response()->json($review);
+        return json()->withItem($review, new ReviewTransformer);
     }
 
     public function destroy(
@@ -55,6 +61,6 @@ class ReviewController extends Controller
     ) {
         $this->reviewService->deleteReview($review);
 
-        return response()->json([], 204);
+        return json()->noContent();
     }
 }

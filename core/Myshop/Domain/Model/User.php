@@ -4,12 +4,14 @@ namespace Myshop\Domain\Model;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 
 /**
  * @property int id
  * @property string name
  * @property string email
  * @property string password
+ * @property Collection reviews
  */
 class User extends Authenticatable
 {
