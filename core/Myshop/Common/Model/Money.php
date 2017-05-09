@@ -4,10 +4,10 @@ namespace Myshop\Common\Model;
 
 /**
  * Class Money
- * @package Mesh\Prime\Common\ValueObjects
+ * @package Myshop\Common\Model
  *
- * $a = new \Mesh\Prime\Common\ValueObjects\Money(100);
- * $b = new \Mesh\Prime\Common\ValueObjects\Money(100);
+ * $a = new Myshop\Common\Model\Money(100);
+ * $b = new Myshop\Common\Model\Money(100);
  * $a == $b // true
  * $a === $b // false
  * $a->isEqualTo($b); // true
