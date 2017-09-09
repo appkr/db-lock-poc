@@ -51,6 +51,26 @@ class Money implements \JsonSerializable
         return $this->value === $other->getAmount();
     }
 
+    public function isBiggerThan(Money $other)
+    {
+        return $this->value > $other->getAmount();
+    }
+
+    public function isEqualOrBiggerThan(Money $other)
+    {
+        return $this->value >= $other->getAmount();
+    }
+
+    public function isSmallerThan(Money $other)
+    {
+        return $this->value < $other->getAmount();
+    }
+
+    public function isEqualOrSmallerThan(Money $other)
+    {
+        return $this->value <= $other->getAmount();
+    }
+
     public function __toString()
     {
         return (string) $this->value;

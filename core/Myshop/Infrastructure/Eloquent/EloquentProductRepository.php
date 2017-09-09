@@ -35,19 +35,11 @@ class EloquentProductRepository implements ProductRepository
             });
         }
 
-        $priceFrom = $param->getPriceFrom();
-        $priceTo = $param->getPriceTo();
-
-        if ($priceFrom && $priceTo) {
-            $builder->whereBetween('price', [$priceFrom, $priceTo]);
-        }
-
-        if ($priceFrom && ! $priceTo) {
-            $builder->where('price', '>=', $priceFrom);
-        }
-
-        if (! $priceFrom && $priceTo) {
-            $builder->where('price', '<=', $priceTo);
+        if ($priceRange = $param->getPriceRange()) {
+            $builder->whereBetween('price', [
+                $priceRange->getBottom(),
+                $priceRange->getTop(),
+            ]);
         }
 
         return $builder->orderBy($param->getSortBy(), $param->getSortDirection())

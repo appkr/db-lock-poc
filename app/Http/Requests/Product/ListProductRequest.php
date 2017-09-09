@@ -5,6 +5,7 @@ namespace App\Http\Requests\Product;
 use App\Http\Requests\BaseRequest;
 use Myshop\Common\Dto\ProductSearchParam;
 use Myshop\Common\Model\Money;
+use Myshop\Common\Model\PriceRange;
 
 class ListProductRequest extends BaseRequest
 {
@@ -32,8 +33,10 @@ class ListProductRequest extends BaseRequest
     {
         return new ProductSearchParam(
             $this->getValue('q'),
-            $this->getMoney('price_from'),
-            $this->getMoney('price_to'),
+            new PriceRange(
+                $this->getMoney('price_from'),
+                $this->getMoney('price_to')
+            ),
             $this->transformSortBy(),
             $this->transformSortDirection(),
             $this->getValue('page'),

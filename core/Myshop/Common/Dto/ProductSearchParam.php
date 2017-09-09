@@ -3,12 +3,12 @@
 namespace Myshop\Common\Dto;
 
 use Myshop\Common\Model\Money;
+use Myshop\Common\Model\PriceRange;
 
 class ProductSearchParam
 {
     private $keyword;
-    private $priceFrom;
-    private $priceTo;
+    private $priceRange;
     private $sortBy;
     private $sortDirection;
     private $page;
@@ -16,16 +16,14 @@ class ProductSearchParam
 
     public function __construct(
         string $keyword = null,
-        Money $priceFrom = null,
-        Money $priceTo = null,
+        PriceRange $priceRange = null,
         string $sortBy = 'created_at',
         string $sortDirection = 'desc',
         int $page = 1,
         int $size = 10
     ) {
         $this->keyword = $keyword;
-        $this->priceFrom = $priceFrom;
-        $this->priceTo = $priceTo;
+        $this->priceRange = $priceRange;
         $this->sortBy = $sortBy;
         $this->sortDirection = $sortDirection;
         $this->page = $page;
@@ -37,14 +35,9 @@ class ProductSearchParam
         return $this->keyword;
     }
 
-    public function getPriceFrom()
+    public function getPriceRange()
     {
-        return $this->priceFrom;
-    }
-
-    public function getPriceTo()
-    {
-        return $this->priceTo;
+        return $this->priceRange;
     }
 
     public function getSortBy()

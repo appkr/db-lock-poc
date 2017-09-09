@@ -4,12 +4,16 @@
 
 선점 잠금이란 사용자 A가 레코드를 업데이트할 목적으로 조회하면서 업데이트가 끝날 때까지 레코드를 잠궈 두는 것을 말합니다. 동시에 다른 사용자 B가 같은 레코드에 대해 잠금을 구하고자 하면 A가 선점한 잠금이 풀릴 때까지 레코드를 조회하거나 업데이트할 수 없으며, A의 업데이트가 끝나면 그제서야 업데이트된 레코드를 사용자 B가 얻을 수 있습니다. 가령, 재고가 한 개 남은 제품을 사용자 A와 B가 동시에 구매하는 상황을 가정해 볼 수 있습니다. A가 구매하면서 시스템이 재고 수량을 0으로 바꾸면, 사용자 B는 도메인 규칙(재고가 있을 때만 구매할 수 있다)에 의해서 예외 응답을 받게 됩니다.
 
-비 선점 잠금이란 레코드를 업데이트하는 순간에 업데이트 가능성을 판단하는 방법입니다. 사용자가 A와 B가 제품 구매를 위해 조회한 레코드 버전이 1인데, 사용자 B가 먼저 구매하면서 레코드의 버전이 2로 바뀌었다면, 사용자 A는 예외 응답을 받게 됩니다. 데이터베이스 레코드를 업데이트할 때 조회한 레코드의 버전을 조건절에 포함하여 구현합니다(`UPDATE products SET stock = 0, version = version + 1 WHERE version = 1 AND id = 1`).
+비 선점 잠금이란 레코드를 업데이트하는 순간에 업데이트 가능성을 판단하는 방법입니다. 사용자가 A와 B가 제품 구매를 위해 조회한 레코드 버전이 1인데, 사용자 B가 먼저 구매하면서 레코드의 버전이 2로 바뀌었다면, 사용자 A는 예외 응답을 받게 됩니다. 아래 SQL 문장처럼 데이터베이스 레코드를 업데이트할 때 조회한 레코드의 버전을 조건절에 포함하여 구현합니다.
+
+```sql
+UPDATE products SET stock = 0, version = version + 1 WHERE version = 1 AND id = 1
+```
 
 이 실험 프로젝트에서는 라라벨 프레임워크와 Pseudo DDD(Domain Driven Design) 설계를 적용하여, 선점 잠금과 비선점 잠금을 구현하고 있습니다.
 
-이 실험 프로젝트를 진행한 후, 알게된 엄청난 사실은... 다음 링크에서 확인해 주세요.
-http://stackoverflow.com/questions/15872326/php-mysql-does-mysql-auto-lock-rows-when-updating
+~~이 실험 프로젝트를 진행한 후, 알게된 엄청난 사실은... 다음 링크에서 확인해 주세요.~~
+~~http://stackoverflow.com/questions/15872326/php-mysql-does-mysql-auto-lock-rows-when-updating~~
 
 ## 프로젝트 설치
 
@@ -42,12 +46,11 @@ DB_PASSWORD=secret
 ~/db-lock-poc $ php artisan migrate --seed
 ```
 
-웹 서버를 구동하고 확인합니다.
-
-```bash
-~/db-lock-poc $ php artisan serve
-# Laravel development server started: <http://127.0.0.1:8000>
-```
+> **IMPORTANT NOTICE on 2017-09-09** 이 프로젝트를 만들고 최초 실험할 때 라라벨 내장 웹서버를 사용했었습니다. `SELECT ... FOR UPDATE`(==`lockForUpdate()`) SQL 문장 없이도, 같은 레코드에 대해 포스트맨에서 보낸 요청 A가 끝나고 나서야, 거의 동시에 실행한 요청 B가 처리되는 것을 확인했습니다.
+>
+> 하지만 사실이 아니었습니다. 이는 **라라벨 내장 웹 서버가 싱글 프로세스만 사용하기 때문이었습니다.** 웹 서버 레벨에서 A 요청에 대한 응답을 완전히 내보내고 나서야 요청 B를 처리하기 시작했기 때문에, 마치 요청 A에 의해 MySQL Row가 잠기고 업데이트가 모두 끝난 후, 요청 B가 요청 A에 의해 업데이트된 Row를 조회하고 업데이트하는 것 같은 환상을 불러일으켰습니다.
+>
+> 따라서, 이 **실험은 반드시 다중 프로세스를 지원하는 웹 서버에서 해야 합니다.**
 
 ## 테스트
 
@@ -57,13 +60,10 @@ DB_PASSWORD=secret
 - 포스트맨 환경 : https://raw.githubusercontent.com/appkr/db-lock-poc/master/docs/DB-LOCK-POC.postman_environment.json
 
 ```php
-<?php
-// app/Http/Controllers/ProductController.php
+<?php // app/Http/Controllers/ProductController.php
 
 class ProductController extends Controller
 {
-    // ...
-    
     public function update(UpdateProductRequest $request, int $productId)
     {
         // [선점 잠금] 레코드를 조회하고 잠급니다.
@@ -83,6 +83,61 @@ class ProductController extends Controller
         );
 
         return json()->withItem($product, new ProductTransformer());
+    }
+}
+```
+
+```php
+<?php // core/Myshop/Application/Service/ProductService.php
+
+class ProductService
+{
+    public function modifyProduct(Product $product, ProductDto $dto)
+    {
+        // For HTTP PUT safety
+        $product->title = $dto->getTitle() ?: $product->title;
+        // ...
+
+        // [비선점잠금]
+        $retrievedVersion = $product->version;
+        $product->version += 1;
+
+        $this->productRepository->save($product, $retrievedVersion);
+
+        return $product->fresh();
+    }   
+}
+```
+
+```php
+<?php // core/Myshop/Infrastructure/Eloquent/EloquentProductRepository.php
+
+class EloquentProductRepository implements ProductRepository
+{
+    public function findByIdWithLock(int $id): Product
+    {
+        return Product::lockForUpdate()->findOrFail($id);
+    }
+
+    public function save(Product $product, int $version = null) : void
+    {
+        DB::beginTransaction();
+
+        try {
+            $this->checkVersionMatch($product, $version);
+            $product->push();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    private function checkVersionMatch(Product $product, int $version = null)
+    {
+        if ($version && $product->fresh()->version !== $version) {
+            throw new OptimisticLockingFailureException('데이터 버전이 일치하지 않습니다.');
+        }
     }
 }
 ```

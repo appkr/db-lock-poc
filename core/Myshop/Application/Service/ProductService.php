@@ -31,6 +31,7 @@ class ProductService
 
     public function modifyProduct(Product $product, ProductDto $dto)
     {
+        // For HTTP PUT safety
         $product->title = $dto->getTitle() ?: $product->title;
         $product->stock = $dto->getStock() ?: $product->stock;
         $product->price = $dto->getPrice() ?: $product->price;
