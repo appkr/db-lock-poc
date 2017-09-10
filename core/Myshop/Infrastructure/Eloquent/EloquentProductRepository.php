@@ -3,7 +3,6 @@
 namespace Myshop\Infrastructure\Eloquent;
 
 use DB;
-use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Myshop\Common\Dto\ProductSearchParam;
@@ -19,9 +18,14 @@ class EloquentProductRepository implements ProductRepository
         return Product::findOrFail($id);
     }
 
-    public function findByIdWithLock(int $id): Product
+    public function findByIdWithExclusiveLock(int $id): Product
     {
         return Product::lockForUpdate()->findOrFail($id);
+    }
+
+    public function findByIdWithSharedLock(int $id): Product
+    {
+        return Product::sharedLock()->findOrFail($id);
     }
 
     public function findBySearchParam(ProductSearchParam $param) : LengthAwarePaginator
@@ -48,36 +52,25 @@ class EloquentProductRepository implements ProductRepository
 
     public function save(Product $product, int $version = null) : void
     {
-        DB::beginTransaction();
-
-        try {
-            $this->checkVersionMatch($product, $version);
-            $product->push();
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        $this->checkVersionMatch($product, $version);
+        $product->push();
     }
 
     public function delete(Product $product) : void
     {
-        DB::beginTransaction();
+        Review::whereIn('id', $product->reviews->pluck('id'))
+            ->get()
+            ->each(function (Review $review) {
+                $review->delete();
+            });
 
-        try {
-            Review::destroy($product->reviews->pluck('id')->toArray());
-            $product->delete();
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        $product->delete();
     }
 
     private function checkVersionMatch(Product $product, int $version = null)
     {
         if ($version && $product->fresh()->version !== $version) {
-            throw new OptimisticLockingFailureException('데이터 버전이 일치하지 않습니다.');
+            throw new OptimisticLockingFailureException;
         }
     }
 }

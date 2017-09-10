@@ -3,7 +3,6 @@
 namespace Myshop\Infrastructure\Eloquent;
 
 use DB;
-use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -25,7 +24,7 @@ class EloquentReviewRepository implements ReviewRepository
         return Review::findOrFail($id);
     }
 
-    public function findByIdWithLock(int $id, Product $product = null): Review
+    public function findByIdWithExclusiveLock(int $id, Product $product = null): Review
     {
         if ($product) {
             return Review::where('product_id', $product->id)
@@ -35,8 +34,20 @@ class EloquentReviewRepository implements ReviewRepository
         return Review::lockForUpdate()->findOrFail($id);
     }
 
-    public function findBySearchParam(ReviewSearchParam $param, Product $product = null) : LengthAwarePaginator
+    public function findByIdWithSharedLock(int $id, Product $product = null): Review
     {
+        if ($product) {
+            return Review::where('product_id', $product->id)
+                ->sharedLock()->findOrFail($id);
+        }
+
+        return Review::sharedLock()->findOrFail($id);
+    }
+
+    public function findBySearchParam(
+        ReviewSearchParam $param,
+        Product $product = null
+    ) : LengthAwarePaginator {
         $builder = Review::query();
 
         if ($product) {
@@ -60,31 +71,14 @@ class EloquentReviewRepository implements ReviewRepository
 
     public function save(Review $review, int $version = null) : void
     {
-        DB::beginTransaction();
-
-        try {
-            $this->checkVersionMatch($review, $version);
-            $review->push();
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        $this->checkVersionMatch($review, $version);
+        $review->push();
     }
 
     public function delete(Review $review, Product $product = null) : void
     {
         $this->checkAssociationBetween($review, $product);
-
-        DB::beginTransaction();
-
-        try {
-            $review->delete();
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        $review->delete();
     }
 
     private function checkAssociationBetween(Review $review, Product $givenProduct = null)
@@ -107,7 +101,7 @@ class EloquentReviewRepository implements ReviewRepository
     private function checkVersionMatch(Review $review, int $version = null)
     {
         if ($version && $review->fresh()->version !== $version) {
-            throw new OptimisticLockingFailureException('데이터 버전이 일치하지 않습니다.');
+            throw new OptimisticLockingFailureException;
         }
     }
 }

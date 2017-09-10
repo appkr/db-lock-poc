@@ -17,7 +17,7 @@ class ReviewService
         $this->reviewRepository = $reviewRepository;
     }
 
-    public function makeReview(Product $product, Authenticatable $user, ReviewDto $dto) : Review
+    public function createReview(Product $product, Authenticatable $user, ReviewDto $dto) : Review
     {
         $review = new Review;
 
@@ -34,12 +34,11 @@ class ReviewService
 
     public function modifyReview(Review $review, ReviewDto $dto) : Review
     {
+        $retrievedVersion = $review->version;
+
         $review->title = $dto->getTitle() ?: $review->title;
         $review->content = $dto->getContent() ?: $review->content;
-
-        // [비선점잠금]
-        $retrievedVersion = $review->version;
-        $review->version += 1;
+        $review->version += 1; // [비선점잠금]
 
         $this->reviewRepository->save($review, $retrievedVersion);
 

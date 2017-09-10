@@ -7,6 +7,8 @@ use App\Http\Requests\Product\DeleteProductRequest;
 use App\Http\Requests\Product\ListProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
 use App\Transformers\ProductTransformer;
+use DB;
+use Exception;
 use Myshop\Application\Service\ProductService;
 use Myshop\Domain\Model\Product;
 use Myshop\Domain\Repository\ProductRepository;
@@ -17,7 +19,8 @@ class ProductController extends Controller
     private $productRepository;
 
     public function __construct(
-        ProductService $productService, ProductRepository $productRepository
+        ProductService $productService,
+        ProductRepository $productRepository
     ) {
         $this->middleware('auth.basic.once', ['except' => 'index']);
         $this->productService = $productService;
@@ -38,32 +41,56 @@ class ProductController extends Controller
 
     public function store(CreateProductRequest $request)
     {
-        $product = $this->productService->makeProduct(
-            $request->getProductDto()
-        );
+        DB::beginTransaction();
 
-        return json()->withItem($product, new ProductTransformer());
+        try {
+            $product = $this->productService->createProduct(
+                $request->getProductDto()
+            );
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+        return json()->withItem($product, new ProductTransformer);
     }
 
     public function update(UpdateProductRequest $request, int $productId)
     {
-        // [선점잠금] 레코드를 조회하고 잠급니다.
-        // $product = $this->productRepository->findByIdWithLock($productId);
+        DB::beginTransaction();
 
-        // [선점잠금] PoC를 위해 강제로 잠금을 연장합니다.
-        // 선점한 프로세스 A가 끝나고 DB 잠금이 풀리면, 다음 프로세스 B를 처리합니다.
-        // sleep(10);
+        try {
+            // [잠금 없음] Row를 잠그지 않고 조회합니다.
+            // $product = $this->productRepository->findById($productId);
 
-        // [비선점잠금]
-        // 조회시점 대비 DB의 버전이 같은지를 확인하여 변경 가능 여부를 판단합니다.
-        $product = $this->productRepository->findById($productId);
-        sleep(10);
+            // [독점적 선점잠금] SELECT ... FOR UPDATE
+            // Row를 조회하고 잠급니다. 다른 프로세스는 해당 Row를 읽을 수 없습니다.
+            $product = $this->productRepository->findByIdWithExclusiveLock($productId);
 
-        $product = $this->productService->modifyProduct(
-            $product, $request->getProductDto()
-        );
+            // [공유된 선점잠금] SELECT ... LOCK IN SHARE MODE
+            // Row를 조회하고 잠금니다. 다른 프로세스는 해당 Row를 읽을 수 있으나 변경할 수 없습니다.
+            // $product = $this->productRepository->findByIdWithSharedLock($productId);
 
-        return json()->withItem($product, new ProductTransformer());
+            // [비선점잠금]
+            // 조회시점 대비 다른 프로세스에의해 데이터가 이미 변경되었는지 확인한 후 변경합니다.
+            // @see core/Myshop/Application/Service/ProductService.php: 42
+            // @see core/Myshop/Infrastructure/Eloquent/EloquentProductRepository.php: 56
+
+            // 시간이 오래 걸리는 작업을 시뮬레이션하기 위해 강제로 10초 지연을 줬습니다.
+            sleep(10);
+
+            $product = $this->productService->modifyProduct(
+                $product, $request->getProductDto()
+            );
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+        return json()->withItem($product, new ProductTransformer);
     }
 
     public function destroy(DeleteProductRequest $request, Product $product)

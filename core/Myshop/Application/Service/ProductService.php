@@ -15,7 +15,7 @@ class ProductService
         $this->productRepository = $productRepository;
     }
 
-    public function makeProduct(ProductDto $dto) : Product
+    public function createProduct(ProductDto $dto) : Product
     {
         $product = new Product;
 
@@ -31,14 +31,15 @@ class ProductService
 
     public function modifyProduct(Product $product, ProductDto $dto)
     {
+        // Cache current version before being changed
+        $retrievedVersion = $product->version;
+
         // For HTTP PUT safety
         $product->title = $dto->getTitle() ?: $product->title;
         $product->stock = $dto->getStock() ?: $product->stock;
         $product->price = $dto->getPrice() ?: $product->price;
         $product->description = $dto->getDescription() ?: $product->description;
-
         // [비선점잠금]
-        $retrievedVersion = $product->version;
         $product->version += 1;
 
         $this->productRepository->save($product, $retrievedVersion);

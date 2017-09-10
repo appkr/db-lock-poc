@@ -18,7 +18,8 @@ class ReviewController extends Controller
     private $reviewRepository;
 
     public function __construct(
-        ReviewService $reviewService, ReviewRepository $reviewRepository
+        ReviewService $reviewService,
+        ReviewRepository $reviewRepository
     ) {
         $this->middleware('auth.basic.once', ['except' => 'index']);
         $this->reviewService = $reviewService;
@@ -39,7 +40,7 @@ class ReviewController extends Controller
 
     public function store(CreateReviewRequest $request, Product $product)
     {
-        $review = $this->reviewService->makeReview(
+        $review = $this->reviewService->createReview(
             $product, $request->user(), $request->getReviewDto()
         );
 
@@ -47,7 +48,9 @@ class ReviewController extends Controller
     }
 
     public function update(
-        UpdateReviewRequest $request, Product $product, int $reviewId
+        UpdateReviewRequest $request,
+        Product $product,
+        int $reviewId
     ) {
         // [선점잠금] 레코드를 조회하고 잠급니다.
         // $review = $this->reviewRepository->findByIdWithLock($reviewId, $product);
@@ -68,7 +71,9 @@ class ReviewController extends Controller
     }
 
     public function destroy(
-        DeleteReviewRequest $request, Product $product, Review $review
+        DeleteReviewRequest $request,
+        Product $product,
+        Review $review
     ) {
         $this->reviewService->deleteReview($review, $product);
 
