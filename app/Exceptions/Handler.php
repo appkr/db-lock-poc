@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -49,6 +50,11 @@ class Handler extends ExceptionHandler
             $message = $exception->getMessage() ?? '알 수 없는 오류가 발생했습니다.';
             $statusCode = method_exists($exception, 'getStatusCode')
                 ? $exception->getStatusCode() : 500;
+
+            if ($exception instanceof ValidationException) {
+                $message = '유효하지 않은 데이터입니다.';
+                $statusCode = 422;
+            }
 
             if ($exception instanceof ModelNotFoundException) {
                 $message = '요청하신 리소스를 찾을 수 없습니다.';
