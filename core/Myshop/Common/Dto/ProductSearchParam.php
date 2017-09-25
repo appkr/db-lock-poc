@@ -17,17 +17,17 @@ class ProductSearchParam
     public function __construct(
         string $keyword = null,
         PriceRange $priceRange = null,
-        string $sortBy = 'created_at',
-        string $sortDirection = 'desc',
-        int $page = 1,
-        int $size = 10
+        string $sortBy = null,
+        string $sortDirection = null,
+        int $page = null,
+        int $size = null
     ) {
         $this->keyword = $keyword;
         $this->priceRange = $priceRange;
-        $this->sortBy = $sortBy;
-        $this->sortDirection = $sortDirection;
-        $this->page = $page;
-        $this->size = $size;
+        $this->sortBy = $sortBy ?: 'created_at';
+        $this->sortDirection = $sortDirection ?: 'desc';
+        $this->page = $page ?: 1;
+        $this->size = $size ?: 10;
     }
 
     public function getKeyword()
