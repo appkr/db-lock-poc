@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Log;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,8 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        //
+        Event::listen('eloquent.*', function ($event) {
+            Log::info($event);
+        });
     }
 }
