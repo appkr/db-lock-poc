@@ -55,7 +55,7 @@ class ListProductRequest extends BaseRequest
         $givenByUser = $this->getValue('sort_by');
 
         return array_key_exists($givenByUser, $map)
-            ? $map[$givenByUser] : null;
+            ? $map[$givenByUser] : 'created_at';
     }
 
     private function transformSortDirection()
@@ -63,7 +63,7 @@ class ListProductRequest extends BaseRequest
         $givenByUser = $this->getBoolean('asc');
 
         if (is_null($givenByUser)) {
-            return null;
+            return 'desc';
         }
 
         return $givenByUser === true ? 'asc' : 'desc';
