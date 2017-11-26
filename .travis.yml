@@ -1,0 +1,20 @@
+language: php
+
+php:
+  - 7.1
+
+sudo: false
+
+install:
+  - composer self-update
+  - travis_retry composer install --no-interaction --no-scripts --prefer-source --dev
+
+before_script:
+  - TRAVIS=true
+  - cp .env.example .env
+  - php artisan key:generate
+
+script: vendor/bin/phpunit
+
+matrix:
+  fast_finish: true

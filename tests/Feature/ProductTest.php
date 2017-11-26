@@ -70,6 +70,6 @@ class ProductTest extends TestCase
                 'price_from' => 500,
                 'price_to' => 2000
             ])
-        )->dump()->assertStatus(200);
+        )->assertStatus(200);
     }
 }

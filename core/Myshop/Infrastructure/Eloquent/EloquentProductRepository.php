@@ -50,13 +50,13 @@ class EloquentProductRepository implements ProductRepository
             ->paginate($param->getSize(), ['*'], 'page', $param->getPage());
     }
 
-    public function save(Product $product, int $version = null) : void
+    public function save(Product $product, int $version = null)
     {
         $this->checkVersionMatch($product, $version);
         $product->push();
     }
 
-    public function delete(Product $product) : void
+    public function delete(Product $product)
     {
         Review::whereIn('id', $product->reviews->pluck('id'))
             ->get()

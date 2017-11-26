@@ -69,13 +69,13 @@ class EloquentReviewRepository implements ReviewRepository
             ->paginate($param->getSize(), ['*'], 'page', $param->getPage());
     }
 
-    public function save(Review $review, int $version = null) : void
+    public function save(Review $review, int $version = null)
     {
         $this->checkVersionMatch($review, $version);
         $review->push();
     }
 
-    public function delete(Review $review, Product $product = null) : void
+    public function delete(Review $review, Product $product = null)
     {
         $this->checkAssociationBetween($review, $product);
         $review->delete();
