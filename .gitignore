@@ -9,3 +9,8 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 .env
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
