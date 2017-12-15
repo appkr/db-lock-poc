@@ -9,6 +9,36 @@ use Tymon\JWTAuth\JWTGuard;
 
 class LoginController extends Controller
 {
+    /**
+     * @SWG\Post(
+     *     path="/auth/login",
+     *     operationId="login",
+     *     tags={"Auth"},
+     *     summary="로그인합니다.",
+     *     consumes={"application/json", "application/x-www-form-urlencoded"},
+     *     @SWG\Parameter(
+     *         name="body",
+     *         in="body",
+     *         required=true,
+     *         @SWG\Schema(ref="#/definitions/LoginRequest"),
+     *     ),
+     *     produces={"application/json"},
+     *     @SWG\Response(
+     *         response=200,
+     *         description="성공",
+     *         @SWG\Schema(ref="#/definitions/AccessToken")
+     *     ),
+     *     @SWG\Response(
+     *         response="default",
+     *         description="오류",
+     *         @SWG\Schema(ref="#/definitions/ErrorDto")
+     *     )
+     * )
+     *
+     * @param Request $request
+     * @param JWTGuard $guard
+     * @return \Illuminate\Http\JsonResponse
+     */
     final public function __invoke(Request $request, JWTGuard $guard)
     {
         $credentials = $request->only('email', 'password');

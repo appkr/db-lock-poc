@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Products;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\UpdateProductRequest;
 use App\Transformers\ProductTransformer;
-use Appkr\Api\Http\Response;
+use Appkr\Api\Http\Response as Presenter;
 use DB;
 use Exception;
 use Myshop\Application\Service\ProductService;
@@ -13,11 +13,60 @@ use Myshop\Domain\Repository\ProductRepository;
 
 class UpdateProductController extends Controller
 {
+    /**
+     * @SWG\Put(
+     *     path="/v1/products/{productId}",
+     *     operationId="updateProduct",
+     *     tags={"Product"},
+     *     summary="상품을 수정합니다.",
+     *     consumes={"application/json", "application/x-www-form-urlencoded"},
+     *     @SWG\Parameter(
+     *         name="Authorization",
+     *         in="header",
+     *         required=true,
+     *         type="string",
+     *         description="액세스 토큰",
+     *         default="Bearer "
+     *     ),
+     *     @SWG\Parameter(
+     *         name="productId",
+     *         in="path",
+     *         type="integer",
+     *         format="int64",
+     *         required=true
+     *     ),
+     *     @SWG\Parameter(
+     *         name="body",
+     *         in="body",
+     *         required=false,
+     *         @SWG\Schema(ref="#/definitions/NewProductRequest"),
+     *     ),
+     *     produces={"application/json"},
+     *     @SWG\Response(
+     *         response=200,
+     *         description="성공",
+     *         @SWG\Schema(ref="#/definitions/ProductDto")
+     *     ),
+     *     @SWG\Response(
+     *         response="default",
+     *         description="오류",
+     *         @SWG\Schema(ref="#/definitions/ErrorDto")
+     *     )
+     * )
+     *
+     * @param UpdateProductRequest $request
+     * @param ProductRepository $repository
+     * @param ProductService $service
+     * @param Presenter $presenter
+     * @param int $productId
+     * @return \Illuminate\Contracts\Http\Response
+     * @throws Exception
+     */
     final public function __invoke(
         UpdateProductRequest $request,
         ProductRepository $repository,
         ProductService $service,
-        Response $presenter,
+        Presenter $presenter,
         int $productId
     ) {
         DB::beginTransaction();
@@ -40,7 +89,7 @@ class UpdateProductController extends Controller
             // @see core/Myshop/Infrastructure/Eloquent/EloquentProductRepository.php: 56
 
             // 시간이 오래 걸리는 작업을 시뮬레이션하기 위해 강제로 10초 지연을 줬습니다.
-            sleep(10);
+            // sleep(10);
 
             $product = $service->modifyProduct($product, $request->getProductDto());
 

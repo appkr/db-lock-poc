@@ -41,6 +41,7 @@ class EloquentProductRepository implements ProductRepository
         }
 
         $priceRange = $param->getPriceRange();
+
         if (null !== $priceRange->getBottom()) {
             $builder->where('price', '>=', $priceRange->getBottom());
         }
