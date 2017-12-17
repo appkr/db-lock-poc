@@ -22,12 +22,16 @@ Route::prefix('auth')->middleware([ThrottleRequests::class.':60,1'])->group(func
     });
 });
 
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->middleware([ThrottleRequests::class.':60,1'])->group(function () {
+    // API 랜딩 라우트
     Route::get('/', 'WelcomeController@welcome');
-    Route::resource('products', 'ProductController', [
-        'only' => ['index', 'store', 'update', 'destroy'],
-    ]);
-    Route::resource('products.reviews', 'ReviewController', [
-        'only' => ['index', 'store', 'update', 'destroy'],
-    ]);
+
+    Route::middleware([ValidateApiUser::class])->group(function () {
+        Route::resource('products', 'ProductController', [
+            'only' => ['index', 'store', 'update', 'destroy'],
+        ]);
+        Route::resource('products.reviews', 'ReviewController', [
+            'only' => ['index', 'store', 'update', 'destroy'],
+        ]);
+    });
 });

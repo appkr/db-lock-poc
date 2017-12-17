@@ -22,7 +22,6 @@ class ProductController extends Controller
         ProductService $productService,
         ProductRepository $productRepository
     ) {
-        $this->middleware('auth.basic.once', ['except' => 'index']);
         $this->productService = $productService;
         $this->productRepository = $productRepository;
     }
