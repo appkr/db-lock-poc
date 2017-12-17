@@ -5,6 +5,7 @@ namespace Myshop\Domain\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Collection;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * @property int id
@@ -13,7 +14,7 @@ use Illuminate\Support\Collection;
  * @property string password
  * @property Collection reviews
  */
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
@@ -37,5 +38,17 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->getKey() === 1;
+    }
+
+    // INTERFACE IMPLEMENTATION
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

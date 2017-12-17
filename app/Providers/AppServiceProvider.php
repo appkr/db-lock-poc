@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 use App\Support\GreaterThanOtherValidator;
+use Illuminate\Auth\EloquentUserProvider;
+use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Support\ServiceProvider;
+use Myshop\Domain\Model\User;
 use Myshop\Domain\Repository\ProductRepository;
 use Myshop\Domain\Repository\ReviewRepository;
 use Myshop\Infrastructure\Eloquent\EloquentProductRepository;
@@ -33,6 +37,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(UserProvider::class, function ($app) {
+            $hasher = $app[Hasher::class];
+            $userModelClass = User::class;
+
+            return new EloquentUserProvider($hasher, $userModelClass);
+        });
+
         $this->app->bind(
             ProductRepository::class,
             EloquentProductRepository::class

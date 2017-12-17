@@ -21,7 +21,6 @@ class ReviewController extends Controller
         ReviewService $reviewService,
         ReviewRepository $reviewRepository
     ) {
-        $this->middleware('auth.basic.once', ['except' => 'index']);
         $this->reviewService = $reviewService;
         $this->reviewRepository = $reviewRepository;
     }
