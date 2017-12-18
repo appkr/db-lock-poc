@@ -541,6 +541,22 @@ Test Cases(TC)|Observations
 }
 ```
 
+## 4. Docker
+
+```
+~/db-lock-poc $ docker build -t l5app .
+~/db-lock-poc $ docker run -d \
+    --name db-lock-poc \
+    -v `pwd`:/var/www/html \
+    -v <MYSQL_DATA_DIR_ON_HOST_MACHINE>:/var/lib/mysql \
+    -p 80:80 \
+    -p 3306:3306 \
+    -p 9001:9001 \
+    -p 6379:6379 \
+    -p 10000:10000 \
+    l5app
+```
+
 ## Sponsor
 
 [Jetbrains](https://www.jetbrains.com/) 사에서 IntelliJ IDE를 제공해주셨습니다.
