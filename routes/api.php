@@ -75,14 +75,12 @@ use Illuminate\Routing\Middleware\ThrottleRequests;
  *     @SWG\Property(
  *         property="created_at",
  *         type="string",
- *         format="date-time",
  *         description="최초 생성 시각",
  *         example="2017-03-01T00:00:00+0900"
  *     ),
  *     @SWG\Property(
  *         property="updated_at",
  *         type="string",
- *         format="date-time",
  *         description="최종 수정 시각",
  *         example="2017-03-01T00:00:00+0900"
  *     )

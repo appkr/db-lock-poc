@@ -726,13 +726,11 @@
                 "created_at": {
                     "description": "\ucd5c\ucd08 \uc0dd\uc131 \uc2dc\uac01",
                     "type": "string",
-                    "format": "date-time",
                     "example": "2017-03-01T00:00:00+0900"
                 },
                 "updated_at": {
                     "description": "\ucd5c\uc885 \uc218\uc815 \uc2dc\uac01",
                     "type": "string",
-                    "format": "date-time",
                     "example": "2017-03-01T00:00:00+0900"
                 }
             }

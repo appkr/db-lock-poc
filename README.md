@@ -232,6 +232,15 @@ Test Cases(TC)|Observations
 
 [링크](OBSERVATIONS.md)에서 결과표를 볼 수 있습니다.
 
+---
+
+# 라라벨에 스웨거 적용 테스트를 위한 프로젝트
+
+이 프로젝트에 [스웨거(Swagger)](https://swagger.io/) 적용 가능성을 검토하고 있습니다.
+
+- API 클라이언트 라이브러리: https://github.com/appkr/swagger-poc-api
+- PHP API 클라이언트 예제 프로젝트: https://github.com/appkr/swagger-api-client-poc
+
 ## Sponsor
 
 [Jetbrains](https://www.jetbrains.com/) 사에서 IntelliJ IDE를 제공해주셨습니다.
