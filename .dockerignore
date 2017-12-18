@@ -1,0 +1,7 @@
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+.git
+.gitignore
+
+.DS_Store
+.idea
