@@ -3,18 +3,15 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * A list of the exception types that should not be reported.
-     *
-     * @var array
-     */
     protected $dontReport = [
         \Illuminate\Auth\AuthenticationException::class,
         \Illuminate\Auth\Access\AuthorizationException::class,
@@ -24,62 +21,50 @@ class Handler extends ExceptionHandler
         \Illuminate\Validation\ValidationException::class,
     ];
 
-    /**
-     * Report or log an exception.
-     *
-     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-     *
-     * @param  \Exception  $exception
-     * @return void
-     */
-    public function report(Exception $exception)
-    {
-        parent::report($exception);
-    }
-
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
-     */
-    public function render($request, Exception $exception)
+    final public function render($request, Exception $e)
     {
         if ($request->is('api/*')) {
-            $message = $exception->getMessage() ?? '알 수 없는 오류가 발생했습니다.';
-            $statusCode = method_exists($exception, 'getStatusCode')
-                ? $exception->getStatusCode() : 500;
+            $code = $statusCode = method_exists($e, 'getStatusCode')
+                ? $e->getStatusCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
+            $message = $e->getMessage() ?? '알 수 없는 오류가 발생했습니다.';
+            $description = null;
 
-            if ($exception instanceof ValidationException) {
+            if ($e instanceof ValidationException) {
+                $code = $statusCode = Response::HTTP_UNPROCESSABLE_ENTITY;
                 $message = '유효하지 않은 데이터입니다.';
-                $statusCode = 422;
+                $description = $e->validator->getMessageBag()->first();
             }
 
-            if ($exception instanceof ModelNotFoundException) {
+            if ($e instanceof ModelNotFoundException) {
                 $message = '요청하신 리소스를 찾을 수 없습니다.';
-                $statusCode = 404;
+                $code = $statusCode = Response::HTTP_NOT_FOUND;
+                $description = $e->getMessage();
+            }
+
+            if ($e instanceof AuthorizationException) {
+                $message = '권한이 없습니다.';
+                $code = $statusCode = Response::HTTP_FORBIDDEN;
+                $description = $e->getMessage();
             }
 
             return response()->json([
-                "message" => $message,
+                'code' => $code,
+                'message' => $message,
+                'description' => $description,
             ], $statusCode);
         }
 
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 
-    /**
-     * Convert an authentication exception into an unauthenticated response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Auth\AuthenticationException  $exception
-     * @return \Illuminate\Http\Response
-     */
-    protected function unauthenticated($request, AuthenticationException $exception)
+    final protected function unauthenticated($request, AuthenticationException $exception)
     {
         if ($request->expectsJson()) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
+            $code = $statusCode = Response::HTTP_UNAUTHORIZED;
+            return response()->json([
+                'code' => $code,
+                'error' => '사용자를 식별할 수 없습니다.'
+            ], $statusCode);
         }
 
         return redirect()->guest(route('login'));
