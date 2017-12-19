@@ -13,7 +13,7 @@ use Myshop\Infrastructure\Exception\OptimisticLockingFailureException;
 
 class EloquentProductRepository implements ProductRepository
 {
-    public function findById(int $id) : Product
+    public function findById(int $id): Product
     {
         return Product::findOrFail($id);
     }
@@ -28,7 +28,7 @@ class EloquentProductRepository implements ProductRepository
         return Product::sharedLock()->findOrFail($id);
     }
 
-    public function findBySearchParam(ProductSearchParam $param) : LengthAwarePaginator
+    public function findBySearchParam(ProductSearchParam $param): LengthAwarePaginator
     {
         $builder = Product::query();
 
@@ -39,11 +39,14 @@ class EloquentProductRepository implements ProductRepository
             });
         }
 
-        if ($priceRange = $param->getPriceRange()) {
-            $builder->whereBetween('price', [
-                $priceRange->getBottom(),
-                $priceRange->getTop(),
-            ]);
+        $priceRange = $param->getPriceRange();
+
+        if ($priceRange->getBottom() !== null) {
+            $builder->where('price', '>=', $priceRange->getBottom());
+        }
+
+        if ($priceRange->getTop() !== null) {
+            $builder->where('price', '<=', $priceRange->getTop());
         }
 
         return $builder->orderBy($param->getSortBy(), $param->getSortDirection())

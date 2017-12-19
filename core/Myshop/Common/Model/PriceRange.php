@@ -7,7 +7,7 @@ class PriceRange
     private $bottom;
     private $top;
 
-    public function __construct(Money $bottom, Money $top)
+    public function __construct(Money $bottom = null, Money $top = null)
     {
         $this->bottom = $bottom;
         $this->top = $top;
