@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ApiAuth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 use Tymon\JWTAuth\JWTGuard;
 
 class LogoutController extends Controller
@@ -11,7 +12,6 @@ class LogoutController extends Controller
     {
         $guard->logout();
 
-        // TODO @appkr Generalize response
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json([], Response::HTTP_NO_CONTENT);
     }
 }

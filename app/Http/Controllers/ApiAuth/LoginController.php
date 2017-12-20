@@ -19,9 +19,10 @@ class LoginController extends Controller
             return $this->respondWithToken($token, $ttl);
         }
 
-        // TODO @appkr Generalize response
         return response()->json([
-            'error' => 'Unauthorized',
+            'code' => Response::HTTP_UNAUTHORIZED,
+            'message' => 'Unauthorized',
+            'description' => '사용자 정보가 일치하지 않습니다.',
         ], Response::HTTP_UNAUTHORIZED);
     }
 

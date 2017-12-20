@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 class WelcomeController extends Controller
 {
-    public function welcome()
+    public function __invoke()
     {
         return response()->json([
             'message' => 'Welcome to db-lock-poc api.',

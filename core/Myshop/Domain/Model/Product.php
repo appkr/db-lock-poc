@@ -14,7 +14,7 @@ use Myshop\Common\Model\Money;
  * @property Money price
  * @property string description
  * @property mixed version
- * @property Collection reviews
+ * @property-read Collection|Review[] reviews
  */
 class Product extends Model
 {

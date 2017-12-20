@@ -4,7 +4,6 @@ namespace App\Http\Requests\Product;
 
 use App\Http\Requests\BaseRequest;
 use Myshop\Common\Dto\ProductDto;
-use Myshop\Common\Model\Money;
 
 class CreateProductRequest extends BaseRequest
 {

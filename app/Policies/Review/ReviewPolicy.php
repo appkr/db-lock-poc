@@ -19,11 +19,11 @@ class ReviewPolicy
 
     public function update(User $user, Review $review)
     {
-        return $user->getKey() === $review->user_id;
+        return $review->isBelongsToUser($user);
     }
 
     public function delete(User $user, Review $review)
     {
-        return $user->getKey() === $review->user_id;
+        return $review->isBelongsToUser($user);
     }
 }
