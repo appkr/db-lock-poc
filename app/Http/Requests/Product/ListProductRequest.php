@@ -20,7 +20,7 @@ class ListProductRequest extends BaseRequest
 
             // 정렬
             'sort_by' => 'in:date,price,stock',
-            'direction' => 'in:asc,desc',
+            'sort_direction' => 'in:asc,desc',
 
             // 페이징
             'page' => 'integer',
@@ -37,9 +37,9 @@ class ListProductRequest extends BaseRequest
                 $this->getMoney('price_to')
             ),
             $this->transformSortBy(),
-            $this->getValue('direction', 'desc'),
-            $this->getValue('page'),
-            $this->getValue('size')
+            $this->getValue('sort_direction', 'desc'),
+            $this->getValue('page', 1),
+            $this->getValue('size', 10)
         );
     }
 

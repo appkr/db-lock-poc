@@ -14,10 +14,10 @@ class ReviewSearchParam
     public function __construct(
         string $keyword = null,
         int $userId = null,
-        string $sortBy = 'created_at',
-        string $sortDirection = 'desc',
-        int $page = 1,
-        int $size = 10
+        string $sortBy = null,
+        string $sortDirection = null,
+        int $page = null,
+        int $size = null
     ) {
         $this->keyword = $keyword;
         $this->userId = $userId;

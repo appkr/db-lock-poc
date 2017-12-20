@@ -18,7 +18,7 @@ class ListReviewRequest extends BaseRequest
 
             // 정렬
             'sort_by' => 'in:date',
-            'asc' => 'in:true,false',
+            'sort_direction' => 'in:asc,desc',
 
             // 페이징
             'page' => 'integer',
@@ -32,9 +32,9 @@ class ListReviewRequest extends BaseRequest
             $this->getValue('q'),
             $this->getValue('user_id'),
             $this->transformSortBy(),
-            $this->transformSortDirection(),
-            $this->getValue('page'),
-            $this->getValue('size')
+            $this->getValue('sort_direction', 'desc'),
+            $this->getValue('page', 1),
+            $this->getValue('size', 10)
         );
     }
 
@@ -48,16 +48,5 @@ class ListReviewRequest extends BaseRequest
 
         return array_key_exists($givenByUser, $map)
             ? $map[$givenByUser] : null;
-    }
-
-    private function transformSortDirection()
-    {
-        $givenByUser = $this->getBoolean('asc');
-
-        if (is_null($givenByUser)) {
-            return null;
-        }
-
-        return $givenByUser === true ? 'asc' : 'desc';
     }
 }

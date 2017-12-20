@@ -15,6 +15,7 @@ class ReviewTransformer extends TransformerAbstract
 
     protected $defaultIncludes = [
         'author',
+        'product',
     ];
 
     protected $visible = [];
