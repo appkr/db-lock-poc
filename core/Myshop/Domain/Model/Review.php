@@ -34,4 +34,11 @@ class Review extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    // HELPERS
+
+    public function isBelongsToUser(User $user)
+    {
+        return $this->getKey() === $user->id;
+    }
 }

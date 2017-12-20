@@ -32,20 +32,19 @@ class EloquentProductRepository implements ProductRepository
     {
         $builder = Product::query();
 
-        if ($keyword = $param->getKeyword()) {
-            $builder->where(function (Builder $query) use ($keyword) {
+        if (null !== $param->getKeyword()) {
+            $builder->where(function (Builder $query) use ($param) {
+                $keyword = $param->getKeyword();
                 $query->where('title', 'like', "%{$keyword}%")
                     ->orWhere('description', 'like', "%{$keyword}%");
             });
         }
 
         $priceRange = $param->getPriceRange();
-
-        if ($priceRange->getBottom() !== null) {
+        if (null !== $priceRange->getBottom()) {
             $builder->where('price', '>=', $priceRange->getBottom());
         }
-
-        if ($priceRange->getTop() !== null) {
+        if (null !== $priceRange->getTop()) {
             $builder->where('price', '<=', $priceRange->getTop());
         }
 

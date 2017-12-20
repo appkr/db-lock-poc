@@ -4,7 +4,6 @@ namespace App\Http\Requests\Product;
 
 use App\Http\Requests\BaseRequest;
 use Myshop\Common\Dto\ProductSearchParam;
-use Myshop\Common\Model\Money;
 use Myshop\Common\Model\PriceRange;
 
 class ListProductRequest extends BaseRequest
@@ -21,7 +20,7 @@ class ListProductRequest extends BaseRequest
 
             // 정렬
             'sort_by' => 'in:date,price,stock',
-            'asc' => 'in:true,false',
+            'direction' => 'in:asc,desc',
 
             // 페이징
             'page' => 'integer',
@@ -38,7 +37,7 @@ class ListProductRequest extends BaseRequest
                 $this->getMoney('price_to')
             ),
             $this->transformSortBy(),
-            $this->transformSortDirection(),
+            $this->getValue('direction', 'desc'),
             $this->getValue('page'),
             $this->getValue('size')
         );
@@ -56,16 +55,5 @@ class ListProductRequest extends BaseRequest
 
         return array_key_exists($givenByUser, $map)
             ? $map[$givenByUser] : 'created_at';
-    }
-
-    private function transformSortDirection()
-    {
-        $givenByUser = $this->getBoolean('asc');
-
-        if (is_null($givenByUser)) {
-            return 'desc';
-        }
-
-        return $givenByUser === true ? 'asc' : 'desc';
     }
 }
