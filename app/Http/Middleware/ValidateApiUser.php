@@ -26,9 +26,11 @@ class ValidateApiUser
 
     private function authenticate(Request $request)
     {
+        // 토큰 유효성을 검사합니다.
         $this->checkForToken($request);
 
         try {
+            // 토큰으로부터 사용자를 식별합니다.
             if (! $this->guard->parseToken()->authenticate()) {
                 throw new UnauthorizedHttpException(
                     'jwt-auth',
@@ -43,6 +45,10 @@ class ValidateApiUser
                 $e->getCode()
             );
         }
+
+        // 토큰에서 "user" Custom Claim을 꺼냅니다.
+        // @see \Myshop\Domain\Model\User::getJWTCustomClaims()
+        // $customClaim = $this->guard->getPayload()->get('user');
     }
 
     private function checkForToken(Request $request)
