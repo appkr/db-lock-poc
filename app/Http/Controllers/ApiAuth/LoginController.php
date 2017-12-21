@@ -21,8 +21,8 @@ class LoginController extends Controller
 
         return response()->json([
             'code' => Response::HTTP_UNAUTHORIZED,
-            'message' => 'Unauthorized',
-            'description' => '사용자 정보가 일치하지 않습니다.',
+            'message' => '사용자 정보가 일치하지 않습니다.',
+            'description' => 'Incorrect credentials',
         ], Response::HTTP_UNAUTHORIZED);
     }
 
