@@ -5,6 +5,8 @@ namespace App\Http\Requests\Product;
 use App\Http\Requests\BaseRequest;
 use Myshop\Common\Dto\ProductSearchParam;
 use Myshop\Common\Model\PriceRange;
+use Myshop\Common\Model\ProductSortKey;
+use Myshop\Common\Model\SortDirection;
 
 class ListProductRequest extends BaseRequest
 {
@@ -12,19 +14,38 @@ class ListProductRequest extends BaseRequest
     {
         return [
             // 검색
-            'q' => 'string|min:1',
+            'q' => [
+                'string',
+                'min:1',
+            ],
 
             // 필터
-            'price_from' => 'integer',
-            'price_to' => 'integer|greater_than_other:price_from',
+            'price_from' => [
+                'integer',
+                'min:0',
+            ],
+            'price_to' => [
+                'integer',
+                'greater_than_other:price_from',
+            ],
 
             // 정렬
-            'sort_by' => 'in:date,price,stock',
-            'sort_direction' => 'in:asc,desc',
+            'sort_key' => [
+                'in:' . implode(',', ProductSortKey::keys()),
+            ],
+            'sort_direction' => [
+                'in:' . implode(',', SortDirection::keys()),
+            ],
 
             // 페이징
-            'page' => 'integer',
-            'size' => 'integer',
+            'page' => [
+                'integer',
+                'min:1',
+            ],
+            'size' => [
+                'integer',
+                'min:1',
+            ],
         ];
     }
 
@@ -36,24 +57,14 @@ class ListProductRequest extends BaseRequest
                 $this->getMoney('price_from'),
                 $this->getMoney('price_to')
             ),
-            $this->transformSortBy(),
-            $this->getValue('sort_direction', 'desc'),
+            new ProductSortKey(
+                $this->getValue('sort_key', ProductSortKey::CREATED_AT)
+            ),
+            new SortDirection(
+                $this->getValue('sort_direction', SortDirection::DESC)
+            ),
             $this->getValue('page', 1),
             $this->getValue('size', 10)
         );
-    }
-
-    private function transformSortBy()
-    {
-        $map = [
-            'date' => 'created_at',
-            'price' => 'price',
-            'stock' => 'stock',
-        ];
-
-        $givenByUser = $this->getValue('sort_by');
-
-        return array_key_exists($givenByUser, $map)
-            ? $map[$givenByUser] : 'created_at';
     }
 }

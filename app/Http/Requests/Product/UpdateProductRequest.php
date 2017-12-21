@@ -4,7 +4,6 @@ namespace App\Http\Requests\Product;
 
 use App\Http\Requests\BaseRequest;
 use Myshop\Common\Dto\ProductDto;
-use Myshop\Common\Model\Money;
 
 class UpdateProductRequest extends BaseRequest
 {
@@ -16,10 +15,22 @@ class UpdateProductRequest extends BaseRequest
     public function rules()
     {
         return [
-            'title' => 'string|min:1',
-            'stock' => 'integer|min:0',
-            'price' => 'integer:min:10',
-            'description' => 'string|min:1',
+            'title' => [
+                'string',
+                'min:1',
+            ],
+            'stock' => [
+                'integer',
+                'min:0',
+            ],
+            'price' => [
+                'integer',
+                'min:0',
+            ],
+            'description' => [
+                'string',
+                'min:1',
+            ],
         ];
     }
 

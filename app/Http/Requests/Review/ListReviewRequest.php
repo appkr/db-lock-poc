@@ -4,6 +4,8 @@ namespace App\Http\Requests\Review;
 
 use App\Http\Requests\BaseRequest;
 use Myshop\Common\Dto\ReviewSearchParam;
+use Myshop\Common\Model\ReviewSortKey;
+use Myshop\Common\Model\SortDirection;
 
 class ListReviewRequest extends BaseRequest
 {
@@ -11,18 +13,33 @@ class ListReviewRequest extends BaseRequest
     {
         return [
             // 검색
-            'q' => 'string|min:1',
+            'q' => [
+                'string',
+                'min:1',
+            ],
 
             // 필터
-            'user_id' => 'integer',
+            'user_id' => [
+                'integer',
+            ],
 
             // 정렬
-            'sort_by' => 'in:date',
-            'sort_direction' => 'in:asc,desc',
+            'sort_key' => [
+                'in:' . implode(',', ReviewSortKey::keys()),
+            ],
+            'sort_direction' => [
+                'in:' . implode(',', SortDirection::keys()),
+            ],
 
             // 페이징
-            'page' => 'integer',
-            'size' => 'integer',
+            'page' => [
+                'integer',
+                'min:1',
+            ],
+            'size' => [
+                'integer',
+                'min:1',
+            ],
         ];
     }
 
@@ -31,22 +48,14 @@ class ListReviewRequest extends BaseRequest
         return new ReviewSearchParam(
             $this->getValue('q'),
             $this->getValue('user_id'),
-            $this->transformSortBy(),
-            $this->getValue('sort_direction', 'desc'),
+            new ReviewSortKey(
+                $this->getValue('sort_key', ReviewSortKey::CREATED_AT)
+            ),
+            new SortDirection(
+                $this->getValue('sort_direction', SortDirection::DESC)
+            ),
             $this->getValue('page', 1),
             $this->getValue('size', 10)
         );
-    }
-
-    private function transformSortBy()
-    {
-        $map = [
-            'date' => 'created_at',
-        ];
-
-        $givenByUser = $this->getValue('sort_by');
-
-        return array_key_exists($givenByUser, $map)
-            ? $map[$givenByUser] : null;
     }
 }

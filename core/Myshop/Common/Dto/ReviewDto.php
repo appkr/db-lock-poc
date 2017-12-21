@@ -9,9 +9,7 @@ class ReviewDto
 
     public function __construct(
         string $title = null,
-        string $content = null,
-        Money $price = null,
-        string $description = null
+        string $content = null
     ) {
         $this->title = $title;
         $this->content = $content;

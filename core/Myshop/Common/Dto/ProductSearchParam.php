@@ -2,14 +2,15 @@
 
 namespace Myshop\Common\Dto;
 
-use Myshop\Common\Model\Money;
 use Myshop\Common\Model\PriceRange;
+use Myshop\Common\Model\ProductSortKey;
+use Myshop\Common\Model\SortDirection;
 
 class ProductSearchParam
 {
     private $keyword;
     private $priceRange;
-    private $sortBy;
+    private $sortKey;
     private $sortDirection;
     private $page;
     private $size;
@@ -17,15 +18,16 @@ class ProductSearchParam
     public function __construct(
         string $keyword = null,
         PriceRange $priceRange = null,
-        string $sortBy = null,
-        string $sortDirection = null,
+        ProductSortKey $sortKey = null,
+        SortDirection $sortDirection = null,
         int $page = null,
         int $size = null
     ) {
         $this->keyword = $keyword;
         $this->priceRange = $priceRange;
-        $this->sortBy = $sortBy ?: 'created_at';
-        $this->sortDirection = $sortDirection ?: 'desc';
+        // NOTE. Dto를 사용하는 리포지토리에서 아래 변수들은 값이 있다고 간주(Not NULL)하고 쿼리를 합니다.
+        $this->sortKey = $sortKey ?: ProductSortKey::CREATED_AT();
+        $this->sortDirection = $sortDirection ?: SortDirection::DESC();
         $this->page = $page ?: 1;
         $this->size = $size ?: 10;
     }
@@ -40,9 +42,9 @@ class ProductSearchParam
         return $this->priceRange;
     }
 
-    public function getSortBy()
+    public function getSortKey()
     {
-        return $this->sortBy;
+        return $this->sortKey;
     }
 
     public function getSortDirection()

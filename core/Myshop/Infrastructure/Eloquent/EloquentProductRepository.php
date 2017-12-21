@@ -48,7 +48,7 @@ class EloquentProductRepository implements ProductRepository
             $builder->where('price', '<=', $priceRange->getTop());
         }
 
-        return $builder->orderBy($param->getSortBy(), $param->getSortDirection())
+        return $builder->orderBy($param->getSortKey(), $param->getSortDirection())
             ->paginate($param->getSize(), ['*'], 'page', $param->getPage());
     }
 
