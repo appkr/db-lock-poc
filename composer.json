@@ -11,6 +11,7 @@
         "guzzlehttp/guzzle": "^6.2",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
+        "myclabs/php-enum": "^1.5",
         "tymon/jwt-auth": "1.0.0-rc.1"
     },
     "require-dev": {
