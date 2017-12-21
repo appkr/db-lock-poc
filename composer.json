@@ -7,6 +7,7 @@
     "require": {
         "php": ">=5.6.4",
         "appkr/api": "3.0.*",
+        "barryvdh/laravel-cors": "^0.10.1",
         "guzzlehttp/guzzle": "^6.2",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",

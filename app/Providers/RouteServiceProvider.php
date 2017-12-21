@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Barryvdh\Cors\HandleCors;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -65,7 +66,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        Route::group([], function ($router) {
+        Route::group(['middleware' => HandleCors::class], function ($router) {
             require base_path('routes/api.php');
         });
 
