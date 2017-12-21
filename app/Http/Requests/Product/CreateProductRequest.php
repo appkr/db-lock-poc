@@ -15,10 +15,24 @@ class CreateProductRequest extends BaseRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|min:1',
-            'stock' => 'required|integer|min:0',
-            'price' => 'required|integer:min:10',
-            'description' => 'required|string|min:1',
+            'title' => [
+                'required',
+                'string',
+            ],
+            'stock' => [
+                'required',
+                'integer',
+                'min:0',
+            ],
+            'price' => [
+                'required',
+                'integer',
+                'min:0',
+            ],
+            'description' => [
+                'required',
+                'string',
+            ],
         ];
     }
 

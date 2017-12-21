@@ -7,16 +7,17 @@ use Myshop\Common\Dto\ReviewDto;
 
 class UpdateReviewRequest extends BaseRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
-
     public function rules()
     {
         return [
-            'title' => 'string|min:1',
-            'content' => 'string|min:1',
+            'title' => [
+                'string',
+                'min:1',
+            ],
+            'content' => [
+                'string',
+                'min:1',
+            ],
         ];
     }
 

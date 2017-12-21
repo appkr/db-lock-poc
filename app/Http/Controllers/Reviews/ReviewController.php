@@ -8,6 +8,7 @@ use App\Http\Requests\Review\DeleteReviewRequest;
 use App\Http\Requests\Review\ListReviewRequest;
 use App\Http\Requests\Review\UpdateReviewRequest;
 use App\Transformers\ReviewTransformer;
+use Appkr\Api\Http\Response;
 use Myshop\Application\Service\ReviewService;
 use Myshop\Domain\Repository\ProductRepository;
 use Myshop\Domain\Repository\ReviewRepository;
@@ -17,15 +18,18 @@ class ReviewController extends Controller
     private $productRepository;
     private $reviewRepository;
     private $reviewService;
+    private $presenter;
 
     public function __construct(
         ProductRepository $productRepository,
         ReviewRepository $reviewRepository,
-        ReviewService $reviewService
+        ReviewService $reviewService,
+        Response $presenter
     ) {
         $this->productRepository = $productRepository;
         $this->reviewService = $reviewService;
         $this->reviewRepository = $reviewRepository;
+        $this->presenter = $presenter;
     }
 
     public function index(ListReviewRequest $request, int $productId)
@@ -33,10 +37,11 @@ class ReviewController extends Controller
         $product = $this->productRepository->findById($productId);
 
         $paginatedReviewCollection = $this->reviewRepository->findBySearchParam(
-            $request->getReviewSearchParam(), $product
+            $request->getReviewSearchParam(),
+            $product
         );
 
-        return json()->withPagination(
+        return $this->presenter->withPagination(
             $paginatedReviewCollection,
             new ReviewTransformer
         );
@@ -50,7 +55,7 @@ class ReviewController extends Controller
             $product, $request->user(), $request->getReviewDto()
         );
 
-        return json()->withItem($review, new ReviewTransformer);
+        return $this->presenter->withItem($review, new ReviewTransformer);
     }
 
     public function update(
@@ -71,13 +76,14 @@ class ReviewController extends Controller
         // 조회시점 대비 DB의 버전이 같은지를 확인하여 변경 가능 여부를 판단합니다.
         $review = $this->reviewRepository->findById($reviewId, $product);
 
+        // Request에서는 리뷰 작성자를 식별할 수 없어서 컨트롤러에서 접근 권한 검사 합니다.
         $this->authorize('update', $review);
 
         $review = $this->reviewService->modifyReview(
             $review, $request->getReviewDto()
         );
 
-        return json()->withItem($review, new ReviewTransformer);
+        return $this->presenter->withItem($review, new ReviewTransformer);
     }
 
     public function destroy(
@@ -88,10 +94,11 @@ class ReviewController extends Controller
         $product = $this->productRepository->findById($productId);
         $review = $this->reviewRepository->findById($reviewId);
 
+        // Request에서는 리뷰 작성자를 식별할 수 없어서 컨트롤러에서 접근 권한 검사 합니다.
         $this->authorize('delete', $review);
 
         $this->reviewService->deleteReview($review, $product);
 
-        return json()->noContent();
+        return $this->presenter->noContent();
     }
 }

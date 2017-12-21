@@ -10,8 +10,14 @@ class CreateReviewRequest extends BaseRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|min:1',
-            'content' => 'required|string|min:1',
+            'title' => [
+                'required',
+                'string',
+            ],
+            'content' => [
+                'required',
+                'string',
+            ],
         ];
     }
 

@@ -50,22 +50,23 @@ class EloquentReviewRepository implements ReviewRepository
     ) : LengthAwarePaginator {
         $builder = Review::query();
 
-        if ($product) {
+        if (null !== $product) {
             $builder->where('product_id', $product->id);
         }
 
-        if ($userId = $param->getUserId()) {
-            $builder->where('user_id', $userId);
+        if (null !== $param->getUserId()) {
+            $builder->where('user_id', $param->getUserId());
         }
 
-        if ($keyword = $param->getKeyword()) {
-            $builder->where(function (Builder $query) use ($keyword) {
+        if (null !== $param->getKeyword()) {
+            $builder->where(function (Builder $query) use ($param) {
+                $keyword = $param->getKeyword();
                 $query->where('title', 'like', "%{$keyword}%")
                     ->orWhere('content', 'like', "%{$keyword}%");
             });
         }
 
-        return $builder->orderBy($param->getSortBy(), $param->getSortDirection())
+        return $builder->orderBy($param->getSortKey(), $param->getSortDirection())
             ->paginate($param->getSize(), ['*'], 'page', $param->getPage());
     }
 
