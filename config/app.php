@@ -168,7 +168,8 @@ return [
          */
         Laravel\Tinker\TinkerServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
-        \Appkr\Api\ApiServiceProvider::class,
+        Appkr\Api\ApiServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
 
         /*
          * Application Service Providers...
