@@ -241,6 +241,8 @@ Test Cases(TC)|Observations
 - API 클라이언트 라이브러리: https://github.com/appkr/swagger-poc-api
 - PHP API 클라이언트 예제 프로젝트: https://github.com/appkr/swagger-api-client-poc
 
+![](docs/api-docs.png)
+
 ## Sponsor
 
 [Jetbrains](https://www.jetbrains.com/) 사에서 IntelliJ IDE를 제공해주셨습니다.
