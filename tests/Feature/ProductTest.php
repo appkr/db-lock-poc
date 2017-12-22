@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Http\Response;
 use Myshop\Domain\Model\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -18,9 +19,9 @@ class ProductTest extends TestCase
 
     const LOGIN_PATH = 'api/auth/login';
     const USER_CREDENTIAL = [
-        'name' => 'John',
-        'email' => 'john@foo.com',
-        'password' => 'password',
+        'name' => 'User',
+        'email' => 'user@example.com',
+        'password' => 'secret',
     ];
 
     public function setUp()
@@ -30,27 +31,27 @@ class ProductTest extends TestCase
         $this->attemptLogin();
     }
 
-        private function createUser(array $overrides = [])
-        {
-            $attributes = array_merge(self::USER_CREDENTIAL, $overrides);
+    private function createUser(array $overrides = [])
+    {
+        $attributes = array_merge(self::USER_CREDENTIAL, $overrides);
 
-            if (isset($attributes['password'])) {
-                $attributes['password'] = bcrypt($attributes['password']);
-            }
-
-            $this->user = factory(User::class)->create($attributes);
+        if (isset($attributes['password'])) {
+            $attributes['password'] = bcrypt($attributes['password']);
         }
 
-        private function attemptLogin(array $overrides = [])
-        {
-            $credentials = array_merge(self::USER_CREDENTIAL, $overrides);
-            $accessToken = $this->post(self::LOGIN_PATH, $credentials)
-                ->decodeResponseJson()['access_token'];
+        $this->user = factory(User::class)->create($attributes);
+    }
 
-            $this->authHeader = [
-                'Authorization' => "Bearer {$accessToken}",
-            ];
-        }
+    private function attemptLogin(array $overrides = [])
+    {
+        $credentials = array_merge(self::USER_CREDENTIAL, $overrides);
+        $accessToken = $this->post(self::LOGIN_PATH, $credentials)
+            ->decodeResponseJson()['access_token'];
+
+        $this->authHeader = [
+            'Authorization' => "Bearer {$accessToken}",
+        ];
+    }
 
     /** @test */
     public function cannot_create_product_when_credential_not_match()
@@ -63,19 +64,19 @@ class ProductTest extends TestCase
     public function can_create_product()
     {
         $this->postJson('/api/v1/products', [
-                'title' => 'TEST TITLE',
-                'stock' => 10,
-                'price' => 1000,
-                'description' => 'TEST DESCRIPTION',
-            ], $this->authHeader)
-            ->assertStatus(200);
+            'title' => 'TEST TITLE',
+            'stock' => 10,
+            'price' => 1000,
+            'description' => 'TEST DESCRIPTION',
+        ], $this->authHeader)
+            ->assertStatus(Response::HTTP_CREATED);
     }
 
     /** @test */
     public function unprocessable_when_request_is_invalid()
     {
         $this->postJson('/api/v1/products', [], $this->authHeader)
-            ->assertStatus(422);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     /** @test */
@@ -94,6 +95,6 @@ class ProductTest extends TestCase
                 'price_to' => 2000
             ]),
             $this->authHeader
-        )->assertStatus(200);
+        )->assertStatus(Response::HTTP_OK);
     }
 }

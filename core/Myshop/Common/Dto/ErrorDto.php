@@ -4,10 +4,30 @@ namespace Myshop\Common\Dto;
 
 use JsonSerializable;
 
+/**
+ * @SWG\Definition(
+ *     type="object",
+ *     required={"code", "message"},
+ * )
+ */
 final class ErrorDto implements JsonSerializable
 {
+    /**
+     * @SWG\Property(format="int32", description="에러 코드", example=400)
+     * @var int $code
+     */
     private $code;
+
+    /**
+     * @SWG\Property(description="에러 메시지", example="Bad Request")
+     * @var string $message
+     */
     private $message;
+
+    /**
+     * @SWG\Property(description="에러 디테일", example="필수값이 누락되었습니다")
+     * @var string $description
+     */
     private $description;
 
     public function __construct(int $code = 0, string $message = '', string $description = '')

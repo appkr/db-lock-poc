@@ -22,6 +22,7 @@ class ReviewTransformer extends TransformerAbstract
 
     protected $hidden = [
         'user_id',
+        'product_id',
     ];
 
     public function transform(Review $review)

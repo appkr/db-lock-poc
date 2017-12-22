@@ -1,0 +1,1079 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "DB-LOCK-POC",
+        "description": "\ub77c\ub77c\ubca8\uc5d0 \uc2a4\uc6e8\uac70 \uc801\uc6a9 \ud14c\uc2a4\ud2b8\ub97c \uc704\ud55c \ud504\ub85c\uc81d\ud2b8",
+        "contact": {
+            "name": "appkr",
+            "email": "juwonkim@me.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://raw.githubusercontent.com/appkr/db-lock-poc/master/LICENSE"
+        },
+        "version": "1"
+    },
+    "host": "localhost",
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "\ub85c\uadf8\uc778\ud569\ub2c8\ub2e4.",
+                "operationId": "login",
+                "consumes": [
+                    "application/json",
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "\uc131\uacf5",
+                        "schema": {
+                            "$ref": "#/definitions/AccessToken"
+                        }
+                    },
+                    "default": {
+                        "description": "\uc624\ub958",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorDto"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "\ub85c\uadf8\uc544\uc6c3\ud569\ub2c8\ub2e4.",
+                "operationId": "logout",
+                "consumes": [
+                    "application/json",
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "\uc561\uc138\uc2a4 \ud1a0\ud070",
+                        "required": true,
+                        "type": "string",
+                        "default": "Bearer "
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "\uc131\uacf5"
+                    },
+                    "default": {
+                        "description": "\uc624\ub958",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorDto"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/me": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "\ud504\ub85c\ud544 \uc815\ubcf4\ub97c \ud655\uc778\ud569\ub2c8\ub2e4.",
+                "operationId": "me",
+                "consumes": [
+                    "application/json",
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "\uc561\uc138\uc2a4 \ud1a0\ud070",
+                        "required": true,
+                        "type": "string",
+                        "default": "Bearer "
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "\uc131\uacf5",
+                        "schema": {
+                            "$ref": "#/definitions/UserDto"
+                        }
+                    },
+                    "default": {
+                        "description": "\uc624\ub958",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorDto"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "\ub85c\uadf8\uc778\ud569\ub2c8\ub2e4.",
+                "operationId": "refreshToken",
+                "consumes": [
+                    "application/json",
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "\uc561\uc138\uc2a4 \ud1a0\ud070",
+                        "required": true,
+                        "type": "string",
+                        "default": "Bearer "
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "\uc131\uacf5",
+                        "schema": {
+                            "$ref": "#/definitions/AccessToken"
+                        }
+                    },
+                    "default": {
+                        "description": "\uc624\ub958",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorDto"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/products": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "\uc0c1\ud488 \ubaa9\ub85d\uc744 \uc870\ud68c\ud569\ub2c8\ub2e4.",
+                "operationId": "listProducts",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "\uc561\uc138\uc2a4 \ud1a0\ud070",
+                        "required": true,
+                        "type": "string",
+                        "default": "Bearer "
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "\uac80\uc0c9\uc5b4",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "price_from",
+                        "in": "query",
+                        "description": "\ucd5c\uc18c \uac00\uaca9",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "price_to",
+                        "in": "query",
+                        "description": "\ucd5c\ub300 \uac00\uaca9",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "sort_key",
+                        "in": "query",
+                        "description": "\uc815\ub82c \ud544\ub4dc",
+                        "required": false,
+                        "type": "string",
+                        "default": "CREATED_AT",
+                        "enum": [
+                            "CREATED_AT",
+                            "PRICE",
+                            "STOCK"
+                        ]
+                    },
+                    {
+                        "name": "sort_direction",
+                        "in": "query",
+                        "description": "\uc815\ub82c \ubc29\ud5a5",
+                        "required": false,
+                        "type": "string",
+                        "default": "DESC",
+                        "enum": [
+                            "ASC",
+                            "DESC"
+                        ]
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "\ud398\uc774\uc9c0",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 1
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "\ud398\uc774\uc9c0\ub2f9 \ud45c\uc2dc\ud560 \uc544\uc774\ud15c \uac1c\uc218",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 10
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ProductListResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "\uc624\ub958",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorDto"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "\uc0c8 \uc0c1\ud488\uc744 \ub4f1\ub85d\ud569\ub2c8\ub2e4.",
+                "operationId": "createProduct",
+                "consumes": [
+                    "application/json",
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "\uc561\uc138\uc2a4 \ud1a0\ud070",
+                        "required": true,
+                        "type": "string",
+                        "default": "Bearer "
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NewProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "\uc131\uacf5",
+                        "schema": {
+                            "$ref": "#/definitions/ProductDto"
+                        }
+                    },
+                    "default": {
+                        "description": "\uc624\ub958",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorDto"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/products/{productId}": {
+            "put": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "\uc0c1\ud488\uc744 \uc218\uc815\ud569\ub2c8\ub2e4.",
+                "operationId": "updateProduct",
+                "consumes": [
+                    "application/json",
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "\uc561\uc138\uc2a4 \ud1a0\ud070",
+                        "required": true,
+                        "type": "string",
+                        "default": "Bearer "
+                    },
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/NewProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "\uc131\uacf5",
+                        "schema": {
+                            "$ref": "#/definitions/ProductDto"
+                        }
+                    },
+                    "default": {
+                        "description": "\uc624\ub958",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorDto"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "\uc0c1\ud488\uc744 \uc0ad\uc81c\ud569\ub2c8\ub2e4.",
+                "operationId": "deleteProduct",
+                "consumes": [
+                    "application/json",
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "\uc561\uc138\uc2a4 \ud1a0\ud070",
+                        "required": true,
+                        "type": "string",
+                        "default": "Bearer "
+                    },
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "\uc131\uacf5"
+                    },
+                    "default": {
+                        "description": "\uc624\ub958",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorDto"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/products/{productId}/reviews": {
+            "get": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "\uc0c1\ud488\uc5d0 \ub300\ud55c \ub9ac\ubdf0 \ubaa9\ub85d\uc744 \uc870\ud68c\ud569\ub2c8\ub2e4.",
+                "operationId": "listReviews",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "\uc561\uc138\uc2a4 \ud1a0\ud070",
+                        "required": true,
+                        "type": "string",
+                        "default": "Bearer "
+                    },
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "\uac80\uc0c9\uc5b4",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "\uc791\uc131\uc790 ID",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "sort_key",
+                        "in": "query",
+                        "description": "\uc815\ub82c \ud544\ub4dc",
+                        "required": false,
+                        "type": "string",
+                        "default": "CREATED_AT",
+                        "enum": [
+                            "CREATED_AT"
+                        ]
+                    },
+                    {
+                        "name": "sort_direction",
+                        "in": "query",
+                        "description": "\uc815\ub82c \ubc29\ud5a5",
+                        "required": false,
+                        "type": "string",
+                        "default": "DESC",
+                        "enum": [
+                            "ASC",
+                            "DESC"
+                        ]
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "\ud398\uc774\uc9c0",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 1
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "\ud398\uc774\uc9c0\ub2f9 \ud45c\uc2dc\ud560 \uc544\uc774\ud15c \uac1c\uc218",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 10
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ReviewListResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "\uc624\ub958",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorDto"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "\uc0c8 \ub9ac\ubdf0\ub97c \ub4f1\ub85d\ud569\ub2c8\ub2e4.",
+                "operationId": "createReview",
+                "consumes": [
+                    "application/json",
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "\uc561\uc138\uc2a4 \ud1a0\ud070",
+                        "required": true,
+                        "type": "string",
+                        "default": "Bearer "
+                    },
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NewReviewRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "\uc131\uacf5",
+                        "schema": {
+                            "$ref": "#/definitions/ReviewDto"
+                        }
+                    },
+                    "default": {
+                        "description": "\uc624\ub958",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorDto"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/products/{productId}/reviews/{reviewId}": {
+            "put": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "\ub9ac\ubdf0\ub97c \uc218\uc815\ud569\ub2c8\ub2e4.",
+                "operationId": "updateReview",
+                "consumes": [
+                    "application/json",
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "\uc561\uc138\uc2a4 \ud1a0\ud070",
+                        "required": true,
+                        "type": "string",
+                        "default": "Bearer "
+                    },
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "reviewId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/NewReviewRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "\uc131\uacf5",
+                        "schema": {
+                            "$ref": "#/definitions/ReviewDto"
+                        }
+                    },
+                    "default": {
+                        "description": "\uc624\ub958",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorDto"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "\ub9ac\ubdf0\ub97c \uc0ad\uc81c\ud569\ub2c8\ub2e4.",
+                "operationId": "deleteReview",
+                "consumes": [
+                    "application/json",
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "\uc561\uc138\uc2a4 \ud1a0\ud070",
+                        "required": true,
+                        "type": "string",
+                        "default": "Bearer "
+                    },
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "reviewId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "\uc131\uacf5"
+                    },
+                    "default": {
+                        "description": "\uc624\ub958",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorDto"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "AccessToken": {
+            "required": [
+                "access_token",
+                "token_type",
+                "expires_in"
+            ],
+            "properties": {
+                "access_token": {
+                    "description": "\uc561\uc138\uc2a4 \ud1a0\ud070",
+                    "type": "string",
+                    "example": "header.body.signature"
+                },
+                "token_type": {
+                    "description": "\ud1a0\ud070 \uc778\uc99d \uc2a4\ud0b4",
+                    "type": "string",
+                    "enum": [
+                        "bearer"
+                    ],
+                    "example": "bearer"
+                },
+                "expires_in": {
+                    "description": "\ub9cc\ub8cc\uae4c\uc9c0 \ub0a8\uc740 \uc2dc\uac04",
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 3600
+                }
+            },
+            "type": "object"
+        },
+        "Timestamp": {
+            "properties": {
+                "created_at": {
+                    "description": "\ucd5c\ucd08 \uc0dd\uc131 \uc2dc\uac01",
+                    "type": "string",
+                    "example": "2017-03-01T00:00:00+0900"
+                },
+                "updated_at": {
+                    "description": "\ucd5c\uc885 \uc218\uc815 \uc2dc\uac01",
+                    "type": "string",
+                    "example": "2017-03-01T00:00:00+0900"
+                }
+            }
+        },
+        "PaginatorLink": {
+            "properties": {
+                "previous": {
+                    "description": "\ub2e4\uc74c \ud398\uc774\uc9c0",
+                    "type": "string",
+                    "example": "http://host/path?page=3"
+                },
+                "next": {
+                    "description": "\uc774\uc804 \ud398\uc774\uc9c0",
+                    "type": "string",
+                    "example": "http://host/path?page=1"
+                }
+            },
+            "type": "object"
+        },
+        "Paginator": {
+            "required": [
+                "total",
+                "count",
+                "per_page",
+                "current_page",
+                "total_pages",
+                "links"
+            ],
+            "properties": {
+                "total": {
+                    "description": "\ucd1d \ub9ac\uc18c\uc2a4 \uac1c\uc218",
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 1000
+                },
+                "count": {
+                    "description": "\ud604\uc7ac \ud398\uc774\uc9c0\uc5d0 \ud45c\uc2dc\ub41c \ub9ac\uc18c\uc2a4 \uac1c\uc218",
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 10
+                },
+                "per_page": {
+                    "description": "\ud398\uc774\uc9c0\ub2f9 \ub9ac\uc18c\uc2a4 \ud45c\uc2dc \uac1c\uc218",
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 10
+                },
+                "current_page": {
+                    "description": "\ud604\uc7ac \ud398\uc774\uc9c0 \ubc88\ud638",
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 2
+                },
+                "total_pages": {
+                    "description": "\ucd1d \ud398\uc774\uc9c0 \uc218",
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 100
+                },
+                "links": {
+                    "$ref": "#/definitions/PaginatorLink"
+                }
+            },
+            "type": "object"
+        },
+        "Meta": {
+            "required": [
+                "pagination"
+            ],
+            "properties": {
+                "pagination": {
+                    "$ref": "#/definitions/Paginator"
+                }
+            },
+            "type": "object"
+        },
+        "ProductListResponse": {
+            "required": [
+                "data",
+                "meta"
+            ],
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ProductDto"
+                    }
+                },
+                "meta": {
+                    "$ref": "#/definitions/Meta"
+                }
+            },
+            "type": "object"
+        },
+        "ReviewListResponse": {
+            "required": [
+                "data",
+                "meta"
+            ],
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ReviewDto"
+                    }
+                },
+                "meta": {
+                    "$ref": "#/definitions/Meta"
+                }
+            },
+            "type": "object"
+        },
+        "ErrorDto": {
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "description": "\uc5d0\ub7ec \ucf54\ub4dc",
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 400
+                },
+                "message": {
+                    "description": "\uc5d0\ub7ec \uba54\uc2dc\uc9c0",
+                    "type": "string",
+                    "example": "Bad Request"
+                },
+                "description": {
+                    "description": "\uc5d0\ub7ec \ub514\ud14c\uc77c",
+                    "type": "string",
+                    "example": "\ud544\uc218\uac12\uc774 \ub204\ub77d\ub418\uc5c8\uc2b5\ub2c8\ub2e4"
+                }
+            },
+            "type": "object"
+        },
+        "NewProductRequest": {
+            "required": [
+                "title",
+                "stock",
+                "price",
+                "description"
+            ],
+            "properties": {
+                "title": {
+                    "description": "\uc0c1\ud488\uba85",
+                    "type": "string",
+                    "example": "[\ud2b9\uac00] \ubc18\uc9dd\ubc18\uc9dd \ube5b\ub098\ub294 \uc5d0\ud3ed\uc2dc \uc2a4\ud2f0\ucee4"
+                },
+                "stock": {
+                    "description": "\uc7ac\uace0\uc218\ub7c9",
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 100
+                },
+                "price": {
+                    "description": "\uac00\uaca9",
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 1600
+                },
+                "description": {
+                    "description": "\uc0c1\ud488 \uc124\uba85",
+                    "type": "string",
+                    "example": "\ub77c\uc774\uc5b8 \uce90\ub9ad\ud130\ub97c \uc8fc\uc81c\ub85c \ud55c \ud22c\uba85 \uc5d0\ud3ed\uc2dc \uc2a4\ud2f0\ucee4.."
+                }
+            },
+            "type": "object"
+        },
+        "ProductDto": {
+            "required": [
+                "id",
+                "title",
+                "stock",
+                "price",
+                "description",
+                "created_at",
+                "updated_at"
+            ],
+            "type": "object",
+            "allOf": [
+                {
+                    "properties": {
+                        "id": {
+                            "description": "ID",
+                            "type": "integer",
+                            "format": "int64",
+                            "example": 245134578
+                        },
+                        "version": {
+                            "description": "\ubc84\uc804",
+                            "type": "integer",
+                            "format": "int32",
+                            "example": 1
+                        }
+                    }
+                },
+                {
+                    "$ref": "#/definitions/NewProductRequest"
+                },
+                {
+                    "$ref": "#/definitions/Timestamp"
+                }
+            ]
+        },
+        "NewReviewRequest": {
+            "required": [
+                "title",
+                "content"
+            ],
+            "properties": {
+                "title": {
+                    "description": "\uc81c\ubaa9",
+                    "type": "string",
+                    "example": "\uc811\ucc29\ub825\uc774 \uc57d\ud574\uc694"
+                },
+                "content": {
+                    "description": "\ubcf8\ubb38",
+                    "type": "string",
+                    "example": "\ud55c \ubc88 \ubd99\uc600\ub2e4\uac00 \ub2e4\uc2dc \ubd99\uc774\ub824\uace0 \ud558\uba74, \uc811\ucc29\uc774 \uc548\ub418\uc694~"
+                }
+            },
+            "type": "object"
+        },
+        "ReviewDto": {
+            "required": [
+                "id",
+                "title",
+                "content",
+                "created_at",
+                "updated_at",
+                "author",
+                "product"
+            ],
+            "type": "object",
+            "allOf": [
+                {
+                    "properties": {
+                        "author": {
+                            "$ref": "#/definitions/UserDto"
+                        },
+                        "product": {
+                            "$ref": "#/definitions/ProductDto"
+                        },
+                        "id": {
+                            "description": "ID",
+                            "type": "integer",
+                            "format": "int64",
+                            "example": 987654321
+                        },
+                        "version": {
+                            "description": "\ubc84\uc804",
+                            "type": "integer",
+                            "format": "int32",
+                            "example": 1
+                        }
+                    }
+                },
+                {
+                    "$ref": "#/definitions/NewReviewRequest"
+                },
+                {
+                    "$ref": "#/definitions/Timestamp"
+                }
+            ]
+        },
+        "LoginRequest": {
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "description": "\uc0ac\uc6a9\uc790 \uc774\uba54\uc77c",
+                    "type": "string",
+                    "example": "user@example.com"
+                },
+                "password": {
+                    "description": "\uc0ac\uc6a9\uc790 \ube44\ubc00\ubc88\ud638 (6 \uae00\uc790 \uc774\uc0c1)",
+                    "type": "string",
+                    "example": "secret"
+                }
+            },
+            "type": "object"
+        },
+        "NewUserRequest": {
+            "required": [
+                "name",
+                "email",
+                "password"
+            ],
+            "type": "object",
+            "allOf": [
+                {
+                    "properties": {
+                        "name": {
+                            "description": "\uc0ac\uc6a9\uc790 \uc774\ub984",
+                            "type": "string",
+                            "example": "User"
+                        }
+                    }
+                },
+                {
+                    "$ref": "#/definitions/LoginRequest"
+                }
+            ]
+        },
+        "UserDto": {
+            "required": [
+                "id",
+                "name",
+                "email",
+                "created_at",
+                "updated_at"
+            ],
+            "type": "object",
+            "allOf": [
+                {
+                    "properties": {
+                        "id": {
+                            "description": "ID",
+                            "type": "integer",
+                            "format": "int64",
+                            "example": "6523879503"
+                        }
+                    }
+                },
+                {
+                    "$ref": "#/definitions/NewUserRequest"
+                },
+                {
+                    "$ref": "#/definitions/Timestamp"
+                }
+            ]
+        }
+    },
+    "securityDefinitions": {
+        "JWT": {
+            "type": "apiKey",
+            "description": "",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

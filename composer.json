@@ -1,13 +1,14 @@
 {
     "name": "appkr/db-lock-poc",
-    "description": "선점 잠금과 비선점 잠금 실험을 위한 프로젝트",
-    "keywords": ["Laravel", "DDD", "Pessimistic Lock", "Optimistic Lock"],
+    "description": "선점 잠금과 비선점 잠금 실험을 위한 프로젝트, 라라벨에 스웨거 적용 테스트를 위한 프로젝트",
+    "keywords": ["Laravel", "DDD", "Pessimistic Lock", "Optimistic Lock", "Swagger"],
     "license": "MIT",
     "type": "project",
     "require": {
         "php": ">=5.6.4",
         "appkr/api": "3.0.*",
         "barryvdh/laravel-cors": "^0.10.1",
+        "darkaonline/l5-swagger": "5.4.*",
         "guzzlehttp/guzzle": "^6.2",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
