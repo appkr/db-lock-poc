@@ -40,17 +40,17 @@ class RefreshController extends Controller
      */
     final public function __invoke(JWTGuard $guard)
     {
-        $ttl = $guard->factory()->getTTL() * 60;
+        $ttlInSec = $guard->factory()->getTTL() * 60;
 
-        return $this->respondWithToken($guard->refresh(), $ttl);
+        return $this->respondWithToken($guard->refresh(), $ttlInSec);
     }
 
-    private function respondWithToken(string $token, int $ttl)
+    private function respondWithToken(string $token, int $ttlInSec)
     {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => $ttl,
+            'expires_in' => $ttlInSec,
         ]);
     }
 }

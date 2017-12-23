@@ -44,9 +44,9 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         if ($token = $guard->attempt($credentials)) {
-            $ttl = $guard->factory()->getTTL() * 60;
+            $ttlInSec = $guard->factory()->getTTL() * 60;
 
-            return $this->respondWithToken($token, $ttl);
+            return $this->respondWithToken($token, $ttlInSec);
         }
 
         return response()->json([
@@ -56,12 +56,12 @@ class LoginController extends Controller
         ], Response::HTTP_UNAUTHORIZED);
     }
 
-    private function respondWithToken(string $token, int $ttl)
+    private function respondWithToken(string $token, int $ttlInSec)
     {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => $ttl,
+            'expires_in' => $ttlInSec,
         ]);
     }
 }

@@ -66,7 +66,7 @@ use Illuminate\Routing\Middleware\ThrottleRequests;
  *         property="expires_in",
  *         type="integer",
  *         format="int32",
- *         description="만료까지 남은 시간",
+ *         description="만료까지 남은 시간(초)",
  *         example=3600
  *     )
  * ),
@@ -163,12 +163,12 @@ Route::get('api', WelcomeController::class);
 Route::prefix('api/auth')->middleware([ThrottleRequests::class.':60,1'])->group(function () {
     // 로그인
     Route::post('login', LoginController::class);
+    // 토큰 갱신
+    Route::post('refresh', RefreshController::class);
 
     Route::middleware([ValidateApiUser::class])->group(function () {
         // 로그아웃
         Route::post('logout', LogoutController::class);
-        // 토큰 갱신
-        Route::post('refresh', RefreshController::class);
         // 내 정보
         Route::post('me', MeController::class);
     });

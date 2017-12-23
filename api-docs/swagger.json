@@ -713,7 +713,7 @@
                     "example": "bearer"
                 },
                 "expires_in": {
-                    "description": "\ub9cc\ub8cc\uae4c\uc9c0 \ub0a8\uc740 \uc2dc\uac04",
+                    "description": "\ub9cc\ub8cc\uae4c\uc9c0 \ub0a8\uc740 \uc2dc\uac04(\ucd08)",
                     "type": "integer",
                     "format": "int32",
                     "example": 3600
