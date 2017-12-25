@@ -180,6 +180,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // NOTE This should be placed after RouteServiceProvider
+        App\Providers\CustomLogServiceProvider::class,
         L5Swagger\L5SwaggerServiceProvider::class,
     ],
 
