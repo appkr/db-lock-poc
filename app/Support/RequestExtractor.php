@@ -4,8 +4,13 @@ namespace App\Support;
 
 use Illuminate\Http\Request;
 
-class RequestExtractor
+class RequestExtractor implements Extractor
 {
+    public function accept(ExtractorVisitor $visitor): array
+    {
+        return $visitor->visit($this);
+    }
+
     public function extract(Request $request)
     {
         return [
@@ -28,7 +33,7 @@ class RequestExtractor
         $content = $request->getContent();
 
         if ($request->getContentType() === 'json') {
-            return json_decode($content);
+            return json_decode($content, true);
         }
 
         return $content;

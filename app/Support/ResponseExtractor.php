@@ -5,8 +5,13 @@ namespace App\Support;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class ResponseExtractor
+class ResponseExtractor implements Extractor
 {
+    public function accept(ExtractorVisitor $visitor): array
+    {
+        return $visitor->visit($this);
+    }
+
     public function extract(Response $response)
     {
         $statusCode = $response->getStatusCode();
