@@ -92,7 +92,7 @@ class Review extends Model
 
     // HELPERS
 
-    public function isBelongsToUser(User $user)
+    public function isOwnedBy(User $user)
     {
         return $this->getKey() === $user->id;
     }

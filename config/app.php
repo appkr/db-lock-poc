@@ -182,6 +182,8 @@ return [
 
         // NOTE This should be placed after RouteServiceProvider
         App\Providers\CustomLogServiceProvider::class,
+        App\Providers\RepositoryServiceProvider::class,
+
         L5Swagger\L5SwaggerServiceProvider::class,
     ],
 

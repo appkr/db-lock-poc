@@ -7,11 +7,6 @@ use Myshop\Common\Dto\ProductDto;
 
 class UpdateProductRequest extends BaseRequest
 {
-    public function authorize()
-    {
-        return $this->user()->isAdmin();
-    }
-
     public function rules()
     {
         return [

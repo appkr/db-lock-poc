@@ -14,8 +14,10 @@ use App\Http\Controllers\Products\{
 };
 use App\Http\Controllers\Reviews\ReviewController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Middleware\CheckPermission;
 use App\Http\Middleware\ValidateApiUser;
 use Illuminate\Routing\Middleware\ThrottleRequests;
+use Myshop\Common\Model\DomainPermission;
 
 /**
  * @SWG\Swagger(
@@ -175,14 +177,17 @@ Route::prefix('api/auth')->middleware([ThrottleRequests::class.':60,1'])->group(
 });
 
 Route::prefix('api/v1')->middleware([
-    ThrottleRequests::class . ':60,1',
     ValidateApiUser::class,
+    ThrottleRequests::class . ':60,1',
 ])->group(function () {
-    Route::middleware([ValidateApiUser::class])->group(function () {
-        // 상품 라우트
-        Route::prefix('products')->group(function () {
-            // 상품 목록
-            Route::get('/', ListProductController::class);
+    // 상품 라우트
+    Route::prefix('products')->group(function () {
+        // 상품 목록
+        Route::get('/', ListProductController::class);
+
+        Route::middleware([
+            CheckPermission::class.':'.DomainPermission::MANAGE_PRODUCT,
+        ])->group(function () {
             // 상품 등록
             Route::post('/', CreateProductController::class);
             // 상품 수정
@@ -190,10 +195,11 @@ Route::prefix('api/v1')->middleware([
             // 상품 삭제
             Route::delete('{productId}', DeleteProductController::class);
         });
-
-        // 리뷰 라우트
-        Route::resource('products.reviews', ReviewController::class, [
-            'only' => ['index', 'store', 'update', 'destroy'],
-        ]);
     });
+
+    // 리뷰 라우트
+    // NOTE. 권한 검사는 ReviewPolicy 클래스에서 처리합니다.
+    Route::resource('products.reviews', ReviewController::class, [
+        'only' => ['index', 'store', 'update', 'destroy'],
+    ]);
 });

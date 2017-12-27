@@ -8,8 +8,11 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
 use Myshop\Common\Dto\ErrorDto;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\InvalidClaimException;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -21,12 +24,12 @@ use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
 class Handler extends ExceptionHandler
 {
     protected $dontReport = [
-        \Illuminate\Auth\AuthenticationException::class,
-        \Illuminate\Auth\Access\AuthorizationException::class,
-        \Symfony\Component\HttpKernel\Exception\HttpException::class,
-        \Illuminate\Database\Eloquent\ModelNotFoundException::class,
-        \Illuminate\Session\TokenMismatchException::class,
-        \Illuminate\Validation\ValidationException::class,
+        AuthenticationException::class,
+        AuthorizationException::class,
+        HttpException::class,
+        ModelNotFoundException::class,
+        TokenMismatchException::class,
+        ValidationException::class,
     ];
 
     final public function render($request, Exception $e)
@@ -68,7 +71,8 @@ class Handler extends ExceptionHandler
             $errorDto = new ErrorDto($code, $message, $e->getMessage());
         }
 
-        if ($e instanceof UnauthorizedHttpException) {
+        if ($e instanceof UnauthorizedHttpException
+            || $e instanceof UnauthorizedException) {
             $errorDto = new ErrorDto(
                 Response::HTTP_UNAUTHORIZED,
                 '사용자를 식별할 수 없습니다.',
@@ -76,7 +80,8 @@ class Handler extends ExceptionHandler
             );
         }
 
-        if ($e instanceof AuthorizationException) {
+        if ($e instanceof AuthorizationException
+            || $e instanceof AuthenticationException) {
             $errorDto = new ErrorDto(
                 Response::HTTP_FORBIDDEN,
                 '권한이 없습니다.',
