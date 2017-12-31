@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Feature;
+namespace TestSuite\Feature;
 
 use Illuminate\Http\Response;
 
-final class ProductTest extends FeatureTestHelper
+final class ProductApiTest extends FeatureTestHelper
 {
     /** @test */
     public function cannot_create_product_when_credential_not_match()

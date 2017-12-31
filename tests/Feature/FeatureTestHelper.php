@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace TestSuite\Feature;
 
 use App;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -11,7 +11,7 @@ use Myshop\Common\Model\DomainPermission;
 use Myshop\Common\Model\DomainRole;
 use Myshop\Domain\Model\User;
 use Myshop\Domain\Repository\RoleRepository;
-use Tests\TestCase;
+use TestSuite\TestCase;
 
 class FeatureTestHelper extends TestCase
 {

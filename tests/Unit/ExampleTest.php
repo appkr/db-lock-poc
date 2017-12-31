@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Unit;
+namespace TestSuite\Unit;
 
-use Tests\TestCase;
+use TestSuite\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
