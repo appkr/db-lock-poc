@@ -2,36 +2,17 @@
 
 namespace Myshop\Infrastructure\Eloquent;
 
-use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Myshop\Common\Model\DomainRole;
 use Myshop\Domain\Model\Role;
-use Myshop\Domain\Repository\PermissionRepository;
 use Myshop\Domain\Repository\RoleRepository;
 
 class EloquentRoleRepository implements RoleRepository
 {
-    const CACHE_KEY = 'roles.all';
-    const CACHE_TTL = 60 * 24;
-
-    /** @var Collection $roleCollection */
-    private $roleCollection;
-    private $permissionRepository;
-
-    public function __construct(
-        PermissionRepository $permissionRepository,
-        CacheRepository $cache
-    ) {
-        $this->permissionRepository = $permissionRepository;
-        $this->roleCollection = $cache->remember(self::CACHE_KEY, self::CACHE_TTL, function () {
-            return Role::all();
-        });
-    }
-
     public function all(): Collection
     {
-        return $this->roleCollection;
+        return Role::all();
     }
 
     /**
@@ -40,16 +21,7 @@ class EloquentRoleRepository implements RoleRepository
      */
     public function findById(int $id): Role
     {
-        $role = $this->roleCollection->first(
-            function (Role $role, int $key) use ($id) {
-                return $id === $role->id;
-            });
-
-        if (is_null($role)) {
-            throw new ModelNotFoundException;
-        }
-
-        return $role;
+        return Role::findOrFail($id);
     }
 
     /**
@@ -58,22 +30,11 @@ class EloquentRoleRepository implements RoleRepository
      */
     public function findByName(DomainRole $roleName): Role
     {
-        $role = $this->roleCollection->first(
-            function (Role $role, int $key) use ($roleName) {
-                return $roleName == $role->name;
-            });
-
-        if (is_null($role)) {
-            throw new ModelNotFoundException;
-        }
-
-        return $role;
+        return Role::where('name', $roleName)->firstOrFail();
     }
 
     public function save(Role $role): void
     {
-        // NOTE. For cache clear logic
-        // @see \Myshop\Infrastructure\ModelObserver\RoleObserver
         $role->push();
     }
 
