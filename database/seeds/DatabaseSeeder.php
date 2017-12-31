@@ -1,70 +1,43 @@
 <?php
 
-use App\Support\KoreanLoremProvider;
-use Faker\Factory;
 use Illuminate\Database\Seeder;
-use Myshop\Common\Model\Money;
-use Myshop\Domain\Model\Product;
-use Myshop\Domain\Model\Review;
-use Myshop\Domain\Model\User;
 
 class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        $this->command->info('데이터 시딩을 시작합니다.');
+        $this->command->info('>>> 데이터 시딩을 시작합니다.');
+        $this->resetSchema();
+        $this->unguardForeignKeyChecks();
 
-        $faker = Factory::create('ko_KR');
-        $koreanProvider = new KoreanLoremProvider($faker);
-        $faker->addProvider($koreanProvider);
+        $this->call(PermissionsTableSeeder::class);
+        $this->call(RolesTableSeeder::class);
 
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-
-        $this->command->error('기존 데이터를 지웁니다.');
-        User::truncate();
-        Product::truncate();
-        Review::truncate();
-
-        $this->command->warn('새 사용자를 생성합니다.');
-        $member = User::forceCreate([
-            'name' => 'Member',
-            'email' => 'member@example.com',
-            'password' => bcrypt('secret'),
-        ]);
-
-        $user = User::forceCreate([
-            'name' => 'User',
-            'email' => 'user@example.com',
-            'password' => bcrypt('secret'),
-        ]);
-        $this->command->line('member@example.com, user@example.com 사용자를 생성했습니다.');
-
-        $this->command->warn('새 상품을 생성합니다.');
-        foreach (range(0, 10) as $index) {
-            Product::forceCreate([
-                'title' => $faker->korSentence(3),
-                'stock' => rand(1, 5),
-                'price' => new Money(rand(1, 10) * 1000),
-                'description' => $faker->korParagraph(2),
-            ]);
+        if (false === App::environment('production')) {
+            $this->call(TestSeeder::class);
         }
-        $this->command->line('새 상품 10개를 생성했습니다.');
 
-        $this->command->warn('새 리뷰를 생성합니다.');
-        Product::all()->each(function (Product $product) use ($member, $user, $faker) {
-            $user = [$member, $user][rand(0, 1)];
+        $this->reguardForeignKeyChecks();
+        $this->command->info('>>> 데이터 시딩을 마칩니다.');
+    }
 
-            Review::forceCreate([
-                'user_id' => $user->id,
-                'product_id' => $product->id,
-                'title' => $faker->korSentence(3),
-                'content' => $faker->korParagraph(2),
-            ]);
-        });
-        $this->command->line('각 상품당 1개씩의 새 리뷰를 생성했습니다.');
+    private function unguardForeignKeyChecks()
+    {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+    }
 
+    private function reguardForeignKeyChecks()
+    {
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+    }
 
-        $this->command->info('데이터 시딩을 마칩니다.');
+    private function resetSchema()
+    {
+        $confirmed = $this->command->confirm('테이블 스키마를 리셋하시겠습니까? 데이터도 같이 삭제됩니다. 리셋하지 않으면 외래키 제약조건 오류가 발생할 수 있습니다.');
+
+        if ($confirmed) {
+            $this->command->call('migrate:refresh');
+            $this->command->warn('=> 테이블 테이터를 초기화했습니다.');
+        }
     }
 }

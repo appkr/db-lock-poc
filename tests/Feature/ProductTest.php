@@ -3,56 +3,9 @@
 namespace Tests\Feature;
 
 use Illuminate\Http\Response;
-use Myshop\Domain\Model\User;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-/**
- * @property mixed user
- * @property string authHeader
- */
-class ProductTest extends TestCase
+final class ProductTest extends FeatureTestHelper
 {
-    use DatabaseMigrations;
-    use DatabaseTransactions;
-
-    const LOGIN_PATH = 'api/auth/login';
-    const USER_CREDENTIAL = [
-        'name' => 'User',
-        'email' => 'user@example.com',
-        'password' => 'secret',
-    ];
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->createUser();
-        $this->attemptLogin();
-    }
-
-    private function createUser(array $overrides = [])
-    {
-        $attributes = array_merge(self::USER_CREDENTIAL, $overrides);
-
-        if (isset($attributes['password'])) {
-            $attributes['password'] = bcrypt($attributes['password']);
-        }
-
-        $this->user = factory(User::class)->create($attributes);
-    }
-
-    private function attemptLogin(array $overrides = [])
-    {
-        $credentials = array_merge(self::USER_CREDENTIAL, $overrides);
-        $accessToken = $this->post(self::LOGIN_PATH, $credentials)
-            ->decodeResponseJson()['access_token'];
-
-        $this->authHeader = [
-            'Authorization' => "Bearer {$accessToken}",
-        ];
-    }
-
     /** @test */
     public function cannot_create_product_when_credential_not_match()
     {

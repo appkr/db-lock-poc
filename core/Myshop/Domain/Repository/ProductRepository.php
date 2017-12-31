@@ -12,6 +12,6 @@ interface ProductRepository
     public function findByIdWithExclusiveLock(int $id) : Product;
     public function findByIdWithSharedLock(int $id) : Product;
     public function findBySearchParam(ProductSearchParam $param) : LengthAwarePaginator;
-    public function save(Product $product, int $version = null);
-    public function delete(Product $product);
+    public function save(Product $product, int $version = null): void;
+    public function delete(Product $product): void;
 }

@@ -6,6 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Collection;
+use Myshop\Common\Model\DomainPermission;
+use Myshop\Common\Model\DomainRole;
+use Myshop\Infrastructure\ModelObserver\UserObserver;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -69,8 +72,10 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read Collection|Review[] $reviews
+ * @property-read Collection|Role[] $roles
+ * @property-read Collection|Permission[] $permissions
  */
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, HasRoleAndPermission
 {
     use Notifiable;
 
@@ -82,6 +87,19 @@ class User extends Authenticatable implements JWTSubject
         'password', 'remember_token',
     ];
 
+    protected $with = [
+        'roles',
+        'permissions',
+    ];
+
+    // REGISTER MODEL OBSERVERS
+
+    protected static function boot()
+    {
+        parent::boot();
+        self::observe(UserObserver::class);
+    }
+
     // RELATIONSHIPS
 
     public function reviews()
@@ -89,21 +107,90 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Review::class);
     }
 
-    // DOMAIN LOGIC
-
-    public function isAdmin()
+    public function roles()
     {
-        return $this->getKey() === 1;
+        return $this->belongsToMany(Role::class);
     }
 
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class);
+    }
+
+    // QUERY SCOPE
+    // ACCESSOR & MUTATOR
+    // DOMAIN LOGIC
     // INTERFACE IMPLEMENTATION
 
+    /**
+     * {@inheritdoc}
+     */
+    public function hasRole($role): bool
+    {
+        return $this->roles->contains(function (Role $item, int $key) use ($role) {
+            $roleName = ($role instanceof Role) ? $role->name : $role;
+
+            // NOTE.
+            // UserRole::FOO() === UserRole::FOO() // false
+            // UserRole::FOO() == UserRole::FOO() // true
+            // UserRole::FOO() == UserRole::FOO // true
+            return $item->name == $roleName;
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasAnyRole($roles): bool
+    {
+        foreach ($roles as $role) {
+            if ($this->hasRole($role)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasPermission($permission): bool
+    {
+        return $this->permissions->contains(function (Permission $item, int $key) use ($permission) {
+            $permissionName = ($permission instanceof Permission)
+                ? $permission->name : $permission;
+
+            return $item->name == $permissionName;
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasAnyPermission($permissions): bool
+    {
+        foreach ($permissions as $permission) {
+            if ($this->hasPermission($permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getJWTIdentifier()
     {
         // Will be used as the value of "sub(Subject)" key in JWT
         return $this->getKey();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getJWTCustomClaims()
     {
         return [

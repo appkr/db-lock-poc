@@ -11,6 +11,7 @@
     <testsuites>
         <testsuite name="Feature Tests">
             <directory suffix="Test.php">./tests/Feature</directory>
+            <exclude>./tests/Feature/FeatureTestHelper.php</exclude>
         </testsuite>
 
         <testsuite name="Unit Tests">

@@ -13,6 +13,6 @@ interface ReviewRepository
     public function findByIdWithExclusiveLock(int $id, Product $product = null) : Review;
     public function findByIdWithSharedLock(int $id, Product $product = null) : Review;
     public function findBySearchParam(ReviewSearchParam $param, Product $product = null) : LengthAwarePaginator;
-    public function save(Review $review, int $version = null);
-    public function delete(Review $review, Product $product = null);
+    public function save(Review $review, int $version = null): void;
+    public function delete(Review $review, Product $product = null): void;
 }

@@ -14,7 +14,10 @@ use Myshop\Infrastructure\Exception\OptimisticLockingFailureException;
 
 class EloquentReviewRepository implements ReviewRepository
 {
-
+    /**
+     * {@inheritdoc}
+     * @throws ModelNotFoundException
+     */
     public function findById(int $id, Product $product = null): Review
     {
         if ($product) {
@@ -24,6 +27,10 @@ class EloquentReviewRepository implements ReviewRepository
         return Review::findOrFail($id);
     }
 
+    /**
+     * {@inheritdoc}
+     * @throws ModelNotFoundException
+     */
     public function findByIdWithExclusiveLock(int $id, Product $product = null): Review
     {
         if ($product) {
@@ -34,6 +41,10 @@ class EloquentReviewRepository implements ReviewRepository
         return Review::lockForUpdate()->findOrFail($id);
     }
 
+    /**
+     * {@inheritdoc}
+     * @throws ModelNotFoundException
+     */
     public function findByIdWithSharedLock(int $id, Product $product = null): Review
     {
         if ($product) {
@@ -70,13 +81,21 @@ class EloquentReviewRepository implements ReviewRepository
             ->paginate($param->getSize(), ['*'], 'page', $param->getPage());
     }
 
-    public function save(Review $review, int $version = null)
+    /**
+     * {@inheritdoc}
+     * @throws OptimisticLockingFailureException
+     */
+    public function save(Review $review, int $version = null): void
     {
         $this->checkVersionMatch($review, $version);
         $review->push();
     }
 
-    public function delete(Review $review, Product $product = null)
+    /**
+     * {@inheritdoc}
+     * @throws ModelNotFoundException
+     */
+    public function delete(Review $review, Product $product = null): void
     {
         $this->checkAssociationBetween($review, $product);
         $review->delete();

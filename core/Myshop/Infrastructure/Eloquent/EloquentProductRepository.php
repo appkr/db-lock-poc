@@ -5,6 +5,7 @@ namespace Myshop\Infrastructure\Eloquent;
 use DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Myshop\Common\Dto\ProductSearchParam;
 use Myshop\Domain\Model\Product;
 use Myshop\Domain\Model\Review;
@@ -13,16 +14,28 @@ use Myshop\Infrastructure\Exception\OptimisticLockingFailureException;
 
 class EloquentProductRepository implements ProductRepository
 {
+    /**
+     * {@inheritdoc}
+     * @throws ModelNotFoundException
+     */
     public function findById(int $id): Product
     {
         return Product::findOrFail($id);
     }
 
+    /**
+     * {@inheritdoc}
+     * @throws ModelNotFoundException
+     */
     public function findByIdWithExclusiveLock(int $id): Product
     {
         return Product::lockForUpdate()->findOrFail($id);
     }
 
+    /**
+     * {@inheritdoc}
+     * @throws ModelNotFoundException
+     */
     public function findByIdWithSharedLock(int $id): Product
     {
         return Product::sharedLock()->findOrFail($id);
@@ -53,13 +66,17 @@ class EloquentProductRepository implements ProductRepository
             ->paginate($param->getSize(), ['*'], 'page', $param->getPage());
     }
 
-    public function save(Product $product, int $version = null)
+    /**
+     * {@inheritdoc}
+     * @throws OptimisticLockingFailureException
+     */
+    public function save(Product $product, int $version = null): void
     {
         $this->checkVersionMatch($product, $version);
         $product->push();
     }
 
-    public function delete(Product $product)
+    public function delete(Product $product): void
     {
         Review::whereIn('id', $product->reviews->pluck('id'))
             ->get()
