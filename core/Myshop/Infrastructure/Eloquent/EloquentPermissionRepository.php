@@ -2,7 +2,6 @@
 
 namespace Myshop\Infrastructure\Eloquent;
 
-use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Myshop\Common\Model\DomainPermission;
@@ -11,22 +10,9 @@ use Myshop\Domain\Repository\PermissionRepository;
 
 class EloquentPermissionRepository implements PermissionRepository
 {
-    const CACHE_KEY = 'permissions.all';
-    const CACHE_TTL = 60 * 24;
-
-    /** @var Collection $permissionCollection */
-    private $permissionCollection;
-
-    public function __construct(CacheRepository $cache)
-    {
-        $this->permissionCollection = $cache->remember(self::CACHE_KEY, self::CACHE_TTL, function () {
-            return Permission::all();
-        });
-    }
-
     public function all(): Collection
     {
-        return $this->permissionCollection;
+        return Permission::all();
     }
 
     /**
@@ -35,16 +21,7 @@ class EloquentPermissionRepository implements PermissionRepository
      */
     public function findById(int $id): Permission
     {
-        $permission = $this->permissionCollection->first(
-            function (Permission $permission, int $key) use ($id) {
-                return $id === $permission->id;
-            });
-
-        if (is_null($permission)) {
-            throw new ModelNotFoundException;
-        }
-
-        return $permission;
+        return Permission::findOrFail($id);
     }
 
     /**
@@ -53,22 +30,11 @@ class EloquentPermissionRepository implements PermissionRepository
      */
     public function findByName(DomainPermission $permissionName): Permission
     {
-        $permission = $this->permissionCollection->first(
-            function (Permission $permission, int $key) use ($permissionName) {
-                return $permissionName == $permission->name;
-            });
-
-        if (is_null($permission)) {
-            throw new ModelNotFoundException;
-        }
-
-        return $permission;
+        return Permission::where('name', $permissionName)->firstOrFail();
     }
 
     public function save(Permission $permission): void
     {
-        // NOTE. For cache clear logic
-        // @see \Myshop\Infrastructure\ModelObserver\PermissionObserver
         $permission->push();
     }
 
