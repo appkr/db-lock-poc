@@ -19,14 +19,9 @@ class FeatureTestHelper extends TestCase
     use DatabaseTransactions;
 
     const LOGIN_PATH = 'api/auth/login';
-    const USER_CREDENTIAL = [
-        'name' => 'User',
-        'email' => 'user@example.com',
-        'password' => 'secret',
-    ];
 
-    /** @var User $user */
-    protected $user;
+    /** @var User $tester */
+    protected $tester;
     /** @var string $authHeader */
     protected $authHeader;
 
@@ -34,9 +29,8 @@ class FeatureTestHelper extends TestCase
     {
         parent::setUp();
         $this->seedRolesAndPermissions();
-        $memberRole = App::make(RoleRepository::class)->findByName(DomainRole::MEMBER());
-        $this->createUser([], [$memberRole]);
-        $this->attemptLogin();
+        $this->createMember();
+        $this->loginAsMember();
     }
 
     protected function seedRolesAndPermissions()
@@ -65,24 +59,60 @@ class FeatureTestHelper extends TestCase
         array $roles = [],
         array $permissions = []
     ) {
-        $attributes = array_merge(self::USER_CREDENTIAL, $overrides);
+        $attributes = array_merge([
+            'name' => 'User',
+            'email' => 'user@example.com',
+            'password' => 'secret',
+        ], $overrides);
 
         if (isset($attributes['password'])) {
             $attributes['password'] = bcrypt($attributes['password']);
         }
 
-        $this->user = factory(User::class)->create($attributes);
+        $this->tester = factory(User::class)->create($attributes);
+        $userRole = App::make(RoleRepository::class)->findByName(DomainRole::USER());
+        $roles = array_merge($roles, [$userRole]);
 
         foreach ($roles as $role) {
-            App::make(RoleService::class)->assignRoleToUser($this->user, $role);
+            App::make(RoleService::class)->assignRoleToUser($this->tester, $role);
         }
 
         if ($permissions) {
             $permissionService = App::make(PermissionService::class);
             foreach ($permissions as $permission) {
-                $permissionService->grantPermissionToUser($this->user, $permission);
+                $permissionService->grantPermissionToUser($this->tester, $permission);
             }
         }
+    }
+
+    /**
+     * @param array|Permission[] $permissions
+     */
+    protected function createAdmin(
+        array $permissions = []
+    ) {
+        $attributes = [
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+        ];
+        $adminRole = App::make(RoleRepository::class)->findByName(DomainRole::ADMIN());
+
+        $this->createUser($attributes, [$adminRole], $permissions);
+    }
+
+    /**
+     * @param array|Permission[] $permissions
+     */
+    protected function createMember(
+        array $permissions = []
+    ) {
+        $attributes = [
+            'name' => 'Member',
+            'email' => 'member@example.com',
+        ];
+        $memberRole = App::make(RoleRepository::class)->findByName(DomainRole::MEMBER());
+
+        $this->createUser($attributes, [$memberRole], $permissions);
     }
 
     /**
@@ -92,14 +122,42 @@ class FeatureTestHelper extends TestCase
      *     @var string $password
      * }
      */
-    protected function attemptLogin(array $overrides = [])
+    protected function login(array $overrides = [])
     {
-        $credentials = array_merge(self::USER_CREDENTIAL, $overrides);
+        $credentials = array_merge([
+            'email' => 'user@example.com',
+            'password' => 'secret',
+        ], $overrides);
+
         $accessToken = $this->post(self::LOGIN_PATH, $credentials)
             ->decodeResponseJson()['access_token'];
 
         $this->authHeader = [
             'Authorization' => "Bearer {$accessToken}",
         ];
+    }
+
+    protected function loginAsUser()
+    {
+        $this->login([
+            'email' => 'user@example.com',
+            'password' => 'secret',
+        ]);
+    }
+
+    protected function loginAsMember()
+    {
+        $this->login([
+            'email' => 'member@example.com',
+            'password' => 'secret',
+        ]);
+    }
+
+    protected function loginAsAdmin()
+    {
+        $this->login([
+            'email' => 'admin@example.com',
+            'password' => 'secret',
+        ]);
     }
 }

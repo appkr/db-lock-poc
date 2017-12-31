@@ -78,6 +78,10 @@ class Review extends Model
         'deleted_at',
     ];
 
+    protected $casts = [
+        'version' => 'integer',
+    ];
+
     // RELATIONSHIPS
 
     public function author()

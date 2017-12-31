@@ -71,8 +71,7 @@ class Handler extends ExceptionHandler
             $errorDto = new ErrorDto($code, $message, $e->getMessage());
         }
 
-        if ($e instanceof UnauthorizedHttpException
-            || $e instanceof UnauthorizedException) {
+        if ($e instanceof UnauthorizedHttpException || $e instanceof AuthenticationException) {
             $errorDto = new ErrorDto(
                 Response::HTTP_UNAUTHORIZED,
                 '사용자를 식별할 수 없습니다.',
@@ -80,8 +79,7 @@ class Handler extends ExceptionHandler
             );
         }
 
-        if ($e instanceof AuthorizationException
-            || $e instanceof AuthenticationException) {
+        if ($e instanceof AuthorizationException || $e instanceof UnauthorizedException) {
             $errorDto = new ErrorDto(
                 Response::HTTP_FORBIDDEN,
                 '권한이 없습니다.',
