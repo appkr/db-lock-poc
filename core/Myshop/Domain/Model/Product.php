@@ -90,7 +90,7 @@ class Product extends Model
     ];
 
     protected $casts = [
-        // NOTE. SQLite에서는 자동 캐스팅되지 않음.
+        // NOTE. SQLite 에서는 자동 캐스팅되지 않음.
         'stock' => 'integer',
         'price' => 'integer',
         'version' => 'integer',

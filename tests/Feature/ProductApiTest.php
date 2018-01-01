@@ -7,14 +7,14 @@ use Illuminate\Http\Response;
 final class ProductApiTest extends FeatureTestHelper
 {
     /** @test */
-    public function cannot_create_product_when_credential_not_match()
+    public function unauthenticated_user_cannot_access_api()
     {
-        $this->postJson('/api/v1/products', [], ['Authorization' => 'Bearer invalid_credential'])
+        $this->postJson('/api/v1/products', [], ['Authorization' => 'Bearer invalid_token'])
             ->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     /** @test */
-    public function cannot_create_product_when_permission_not_satisfied()
+    public function unauthorized_user_cannot_create_product()
     {
         $this->createUser();
         $this->loginAsUser();
@@ -29,7 +29,7 @@ final class ProductApiTest extends FeatureTestHelper
     }
 
     /** @test */
-    public function can_create_product()
+    public function authorized_user_can_create_product()
     {
         $this->postJson('/api/v1/products', [
             'title' => 'TEST TITLE',
@@ -41,14 +41,14 @@ final class ProductApiTest extends FeatureTestHelper
     }
 
     /** @test */
-    public function unprocessable_when_request_is_invalid()
+    public function cannot_create_product_when_request_is_invalid()
     {
         $this->postJson('/api/v1/products', [], $this->authHeader)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     /** @test */
-    public function can_see_list_of_products_regardless_of_permissions()
+    public function even_visitors_can_see_list_of_products()
     {
         $this->postJson('/api/v1/products', [
             'title' => 'TEST TITLE',
@@ -57,6 +57,7 @@ final class ProductApiTest extends FeatureTestHelper
             'description' => 'TEST DESCRIPTION',
         ], $this->authHeader);
 
+        // 리뷰 목록 조회는 인증이 필요하지 않습니다.
         $this->createUser();
         $this->loginAsUser();
         $this->getJson('/api/v1/products?' . http_build_query([
@@ -69,7 +70,7 @@ final class ProductApiTest extends FeatureTestHelper
     }
 
     /** @test */
-    public function can_update_product()
+    public function authorized_user_can_update_product()
     {
         $responseBody = $this->postJson('/api/v1/products', [
             'title' => 'TEST TITLE',
@@ -90,7 +91,7 @@ final class ProductApiTest extends FeatureTestHelper
     }
 
     /** @test */
-    public function can_delete_product()
+    public function authorized_user_can_delete_product()
     {
         $responseBody = $this->postJson('/api/v1/products', [
             'title' => 'TEST TITLE',
