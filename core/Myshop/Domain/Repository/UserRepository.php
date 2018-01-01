@@ -10,6 +10,6 @@ interface UserRepository
     public function findById(int $id) : User;
     public function findByName(string $name, QueryOperator $operator = null): User;
     public function findByEmail(string $email, QueryOperator $operator = null): User;
-    public function save(User $user): void;
-    public function delete(User $user): void;
+    public function save(User $user);
+    public function delete(User $user);
 }

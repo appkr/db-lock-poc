@@ -173,7 +173,7 @@ class EloquentProductRepository implements ProductRepository
         return Product::sharedLock()->findOrFail($id);
     }
 
-    public function save(Product $product, int $version = null) : void
+    public function save(Product $product, int $version = null)
     {
         $this->checkVersionMatch($product, $version);
         $product->push();

@@ -60,14 +60,14 @@ class CachedRoleRepository implements RoleRepository
         return $role;
     }
 
-    public function save(Role $role): void
+    public function save(Role $role)
     {
         // NOTE. For cache clear logic
         // @see \Myshop\Infrastructure\ModelObserver\RoleObserver
         $this->baseRepository->save($role);
     }
 
-    public function delete(Role $role): void
+    public function delete(Role $role)
     {
         $this->baseRepository->delete($role);
     }

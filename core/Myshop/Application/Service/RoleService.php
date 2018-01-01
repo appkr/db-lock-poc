@@ -60,7 +60,7 @@ class RoleService
         return $role->fresh();
     }
 
-    public function assignRoleToUser(User $user, Role $role): void
+    public function assignRoleToUser(User $user, Role $role)
     {
         $user->roles()->attach($role);
 
@@ -74,7 +74,7 @@ class RoleService
         $this->userRepository->save($user);
     }
 
-    public function removeRoleFromUser(User $user, Role $role): void
+    public function removeRoleFromUser(User $user, Role $role)
     {
         $user->roles()->detach($role);
 
@@ -90,7 +90,7 @@ class RoleService
      * @param User $user
      * @param array|Role[]|Collection $roles
      */
-    public function syncRolesOfUser(User $user, $roles): void
+    public function syncRolesOfUser(User $user, $roles)
     {
         $roleIds = $this->getRoleIds($roles);
         $user->roles()->sync($roleIds);

@@ -46,7 +46,7 @@ class PermissionService
         }
     }
 
-    public function attachPermissionToRole(Role $role, Permission $permission): void
+    public function attachPermissionToRole(Role $role, Permission $permission)
     {
         $role->permissions()->attach($permission);
         $this->roleRepository->save($role);
@@ -59,7 +59,7 @@ class PermissionService
         }
     }
 
-    public function detachPermissionFromRole(Role $role, Permission $permission): void
+    public function detachPermissionFromRole(Role $role, Permission $permission)
     {
         $role->permissions()->detach($permission);
         $this->roleRepository->save($role);
@@ -75,7 +75,7 @@ class PermissionService
      * @param Role $role
      * @param array|Permission[]|Collection $permissions
      */
-    public function syncPermissionsOfRole(Role $role, $permissions): void
+    public function syncPermissionsOfRole(Role $role, $permissions)
     {
         $permissionIds = $this->getPermissionIds($permissions);
         $role->permissions()->sync($permissionIds);
@@ -95,13 +95,13 @@ class PermissionService
     //    givePermissionToRole/revokePermissionToRole/syncPermissionOfRole API를 호출하면,
     //    User-Permission 맵핑 저장소도 User-Role-Permission 관계와 일치하도록 업데이트한다.
 
-    public function grantPermissionToUser(User $user, Permission $permission): void
+    public function grantPermissionToUser(User $user, Permission $permission)
     {
         // Role이 Permission 보다 상위 개념이므로, Permission 할당이 Role로 Bubble up 되지 않음.
         $user->permissions()->attach($permission);
     }
 
-    public function revokePermissionFromUser(User $user, Permission $permission): void
+    public function revokePermissionFromUser(User $user, Permission $permission)
     {
         $user->permissions()->detach($permission);
     }
@@ -110,7 +110,7 @@ class PermissionService
      * @param User $user
      * @param array|Permission[]|Collection $permissions
      */
-    public function syncPermissionsOfUser(User $user, $permissions): void
+    public function syncPermissionsOfUser(User $user, $permissions)
     {
         $permissionIds = $this->getPermissionIds($permissions);
         $user->permissions()->sync($permissionIds);

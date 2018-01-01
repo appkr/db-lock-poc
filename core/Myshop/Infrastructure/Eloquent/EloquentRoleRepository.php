@@ -33,12 +33,12 @@ class EloquentRoleRepository implements RoleRepository
         return Role::where('name', $roleName)->firstOrFail();
     }
 
-    public function save(Role $role): void
+    public function save(Role $role)
     {
         $role->push();
     }
 
-    public function delete(Role $role): void
+    public function delete(Role $role)
     {
         // TODO @appkr 맵핑 테이블 삭제를 어디서 할 것인가? Model Observer?
         // ON DELETE CASCADE 적용되어 있음.

@@ -33,12 +33,12 @@ class EloquentPermissionRepository implements PermissionRepository
         return Permission::where('name', $permissionName)->firstOrFail();
     }
 
-    public function save(Permission $permission): void
+    public function save(Permission $permission)
     {
         $permission->push();
     }
 
-    public function delete(Permission $permission): void
+    public function delete(Permission $permission)
     {
         // TODO @appkr 맵핑 테이블 삭제를 어디서 할 것인가? Model Observer?
         // ON DELETE CASCADE 적용되어 있음.

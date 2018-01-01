@@ -60,14 +60,14 @@ class CachedPermissionRepository implements PermissionRepository
         return $permission;
     }
 
-    public function save(Permission $permission): void
+    public function save(Permission $permission)
     {
         // NOTE. For cache clear logic
         // @see \Myshop\Infrastructure\ModelObserver\PermissionObserver
         $this->baseRepository->save($permission);
     }
 
-    public function delete(Permission $permission): void
+    public function delete(Permission $permission)
     {
         $this->baseRepository->save($permission);
     }

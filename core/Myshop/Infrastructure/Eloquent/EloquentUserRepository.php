@@ -44,12 +44,12 @@ class EloquentUserRepository implements UserRepository
         return User::where('email', $operator, $email)->firstOrFail();
     }
 
-    public function save(User $user): void
+    public function save(User $user)
     {
         $user->push();
     }
 
-    public function delete(User $user): void
+    public function delete(User $user)
     {
         $user->delete();
     }
