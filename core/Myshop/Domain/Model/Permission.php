@@ -47,8 +47,8 @@ class Permission extends Model
         return new DomainPermission($name);
     }
 
-    public function setNameAttribute(DomainPermission $userPermission)
+    public function setNameAttribute(DomainPermission $domainPermission)
     {
-        $this->attributes['name'] = $userPermission->getValue();
+        $this->attributes['name'] = $domainPermission->getValue();
     }
 }

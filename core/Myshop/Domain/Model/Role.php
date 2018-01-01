@@ -48,8 +48,8 @@ class Role extends Model
         return new DomainRole($name);
     }
 
-    public function setNameAttribute(DomainRole $userRole)
+    public function setNameAttribute(DomainRole $domainRole)
     {
-        $this->attributes['name'] = $userRole->getValue();
+        $this->attributes['name'] = $domainRole->getValue();
     }
 }

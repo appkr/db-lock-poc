@@ -6,8 +6,6 @@ use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Collection;
-use Myshop\Common\Model\DomainPermission;
-use Myshop\Common\Model\DomainRole;
 use Myshop\Infrastructure\ModelObserver\UserObserver;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -131,9 +129,9 @@ class User extends Authenticatable implements JWTSubject, HasRoleAndPermission
             $roleName = ($role instanceof Role) ? $role->name : $role;
 
             // NOTE.
-            // UserRole::FOO() === UserRole::FOO() // false
-            // UserRole::FOO() == UserRole::FOO() // true
-            // UserRole::FOO() == UserRole::FOO // true
+            // DomainRole::FOO() === DomainRole::FOO() // false
+            // DomainRole::FOO() == DomainRole::FOO() // true
+            // DomainRole::FOO() == DomainRole::FOO // true
             return $item->name == $roleName;
         });
     }

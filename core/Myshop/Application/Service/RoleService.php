@@ -4,6 +4,7 @@ namespace Myshop\Application\Service;
 
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Collection;
+use Myshop\Common\Model\DomainPermission;
 use Myshop\Common\Model\DomainRole;
 use Myshop\Domain\Model\Role;
 use Myshop\Domain\Model\User;
@@ -35,7 +36,7 @@ class RoleService
 
     /**
      * @param DomainRole $roleName
-     * @param array|UserPermission[] $givenPermissionNames
+     * @param array|DomainPermission[] $givenPermissionNames
      * @param string|null $guardName
      * @return Role
      */
