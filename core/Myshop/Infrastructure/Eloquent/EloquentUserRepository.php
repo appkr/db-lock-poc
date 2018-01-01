@@ -24,9 +24,7 @@ class EloquentUserRepository implements UserRepository
      */
     public function findByName(string $name, QueryOperator $operator = null): User
     {
-        if (is_null($operator)) {
-            $operator = QueryOperator::EQUAL();
-        }
+        $operator = $operator ?: QueryOperator::EQUAL();
 
         return User::where('name', $operator, $name)->firstOrFail();
     }
@@ -37,9 +35,7 @@ class EloquentUserRepository implements UserRepository
      */
     public function findByEmail(string $email, QueryOperator $operator = null): User
     {
-        if (is_null($operator)) {
-            $operator = QueryOperator::EQUAL();
-        }
+        $operator = $operator ?: QueryOperator::EQUAL();
 
         return User::where('email', $operator, $email)->firstOrFail();
     }

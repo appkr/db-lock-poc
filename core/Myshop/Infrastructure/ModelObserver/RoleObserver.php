@@ -23,6 +23,7 @@ class RoleObserver
 
     public function deleted(Role $role)
     {
+        // TODO @appkr save() 호출 없이도 저장되지는 확인 필요
         $role->permissions()->detach();
         $this->cache->forget(self::CACHE_KEY);
     }
