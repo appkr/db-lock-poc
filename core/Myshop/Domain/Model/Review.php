@@ -78,6 +78,13 @@ class Review extends Model
         'deleted_at',
     ];
 
+    protected $casts = [
+        // NOTE. SQLite 에서는 자동 캐스팅되지 않음.
+        'user_id' => 'integer',
+        'product_id' => 'integer',
+        'version' => 'integer',
+    ];
+
     // RELATIONSHIPS
 
     public function author()
@@ -94,6 +101,6 @@ class Review extends Model
 
     public function isOwnedBy(User $user)
     {
-        return $this->getKey() === $user->id;
+        return $this->author->getKey() === $user->id;
     }
 }

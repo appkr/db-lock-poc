@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/appkr/db-lock-poc.svg?branch=introduce-jwt)](https://travis-ci.org/appkr/db-lock-poc)
+
 # 데이터베이스 잠금(동시성 문제)을 실험하기 위한 프로젝트
 
 선점 잠금(Pessimistic Lock)과 비선점 잠금(Optimistic Lock)을 실험하기 위한 프로젝트입니다. 선점 잠금은 데이터베이스 레벨에서 지원하는 잠금 기능이며, 비선점 잠금은 애플리케이션 레벨에서 직접 구현해야 하는 잠금 기능입니다. 
@@ -173,7 +175,7 @@ class EloquentProductRepository implements ProductRepository
         return Product::sharedLock()->findOrFail($id);
     }
 
-    public function save(Product $product, int $version = null) : void
+    public function save(Product $product, int $version = null)
     {
         $this->checkVersionMatch($product, $version);
         $product->push();

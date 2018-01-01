@@ -11,6 +11,6 @@ interface RoleRepository
     public function all(): Collection;
     public function findById(int $id): Role;
     public function findByName(DomainRole $roleName): Role;
-    public function save(Role $role): void;
-    public function delete(Role $role): void;
+    public function save(Role $role);
+    public function delete(Role $role);
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Feature;
+namespace TestSuite\Feature;
 
-use Tests\TestCase;
+use TestSuite\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=5.6.4",
+        "php": ">=7.0",
         "appkr/api": "3.0.*",
         "barryvdh/laravel-cors": "^0.10.1",
         "darkaonline/l5-swagger": "5.4.*",
@@ -31,7 +31,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "TestSuite\\": "tests/"
         }
     },
     "scripts": {

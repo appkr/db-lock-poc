@@ -89,6 +89,13 @@ class Product extends Model
         'deleted_at',
     ];
 
+    protected $casts = [
+        // NOTE. SQLite 에서는 자동 캐스팅되지 않음.
+        'stock' => 'integer',
+        'price' => 'integer',
+        'version' => 'integer',
+    ];
+
     // RELATIONSHIPS
 
     public function reviews()

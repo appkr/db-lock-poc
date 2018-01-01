@@ -20,8 +20,9 @@ class ReviewPolicy
         return $review->isOwnedBy($user);
     }
 
-    public function destroy(User $user, Review $review)
+    public function delete(User $user, Review $review)
     {
+        // NOTE. 컨트롤러 함수명이 아니라, Gate에서 정의한 상수를 함수명으로 사용해야 함을 주의할 것.
         return $review->isOwnedBy($user);
     }
 }
