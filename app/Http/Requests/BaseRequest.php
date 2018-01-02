@@ -30,7 +30,7 @@ class BaseRequest extends FormRequest
 
         // 2/3/4에 해당하면 사용자가 입력한 값을 그대로 이용하고
         // 1에 해당하면 $default로 넘겨 받은 값을 이용합니다.
-        $value = $this->exists($key) ? $this->input($key) : $default;
+        $value = $this->has($key) ? $this->input($key) : $default;
 
         if (is_null($filter) || !is_callable($filter)) {
             return $value;
