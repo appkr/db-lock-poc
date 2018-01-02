@@ -3,7 +3,14 @@ language: php
 php:
   - 7.0
 
-sudo: false
+services:
+  - docker
+
+before_install:
+  - docker build -t l5app .
+  - sleep 15
+  - docker run -d --name db-lock-poc -v `pwd`:/var/www/html -v `pwd`/mysql_data:/var/lib/mysql -p 8000:80 l5app
+  - docker logs db-lock-poc
 
 install:
   - composer self-update
@@ -14,7 +21,10 @@ before_script:
   - cp .env.example .env
   - php artisan key:generate
 
-script: vendor/bin/phpunit
+script:
+  - vendor/bin/phpunit
+  - docker ps
+  - wget http://localhost:8000/api -O welcome.json
 
 matrix:
   fast_finish: true
