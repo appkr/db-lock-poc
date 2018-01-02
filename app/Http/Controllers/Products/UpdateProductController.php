@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Products;
 
 use App\Http\Controllers\Controller;
+use App\Http\Exception\ConflictException;
 use App\Http\Requests\Product\UpdateProductRequest;
 use App\Transformers\ProductTransformer;
 use Appkr\Api\Http\Response as Presenter;
@@ -10,6 +11,7 @@ use DB;
 use Exception;
 use Myshop\Application\Service\ProductService;
 use Myshop\Domain\Repository\ProductRepository;
+use Myshop\Infrastructure\Exception\OptimisticLockingFailureException;
 
 class UpdateProductController extends Controller
 {
@@ -94,6 +96,9 @@ class UpdateProductController extends Controller
             $product = $service->modifyProduct($product, $request->getProductDto());
 
             DB::commit();
+        } catch (OptimisticLockingFailureException $e) {
+            DB::rollBack();
+            throw new ConflictException($e);
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;

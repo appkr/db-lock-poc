@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Http\Exception\UnauthenticatedException;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -9,9 +10,10 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
 use Illuminate\Session\TokenMismatchException;
-use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
 use Myshop\Common\Dto\ErrorDto;
+use Myshop\Common\Exception\DomainException;
+use Myshop\Common\Exception\LogLevel;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\InvalidClaimException;
@@ -32,7 +34,18 @@ class Handler extends ExceptionHandler
         ValidationException::class,
     ];
 
-    final public function render($request, Exception $e)
+    public function report(Exception $e)
+    {
+        if ($e instanceof DomainException) {
+            if ($e->getLogLevel()->getValue() <= LogLevel::ERROR) {
+                $this->notifyException($e);
+            }
+        }
+
+        parent::report($e);
+    }
+
+    public function render($request, Exception $e)
     {
         if ($request->is('api/*')) {
             $errorDto = $this->mapException($e);
@@ -43,7 +56,7 @@ class Handler extends ExceptionHandler
         return parent::render($request, $e);
     }
 
-    final protected function unauthenticated($request, AuthenticationException $e)
+    protected function unauthenticated($request, AuthenticationException $e)
     {
         if ($request->expectsJson()) {
             $errorDto = new ErrorDto(
@@ -71,7 +84,10 @@ class Handler extends ExceptionHandler
             $errorDto = new ErrorDto($code, $message, $e->getMessage());
         }
 
-        if ($e instanceof UnauthorizedHttpException || $e instanceof AuthenticationException) {
+        if ($e instanceof UnauthorizedHttpException
+            || $e instanceof AuthenticationException
+            || $e instanceof UnauthenticatedException
+        ) {
             $errorDto = new ErrorDto(
                 Response::HTTP_UNAUTHORIZED,
                 '사용자를 식별할 수 없습니다.',
@@ -79,7 +95,10 @@ class Handler extends ExceptionHandler
             );
         }
 
-        if ($e instanceof AuthorizationException || $e instanceof UnauthorizedException) {
+        if ($e instanceof AuthorizationException
+            || $e instanceof \Illuminate\Validation\UnauthorizedException
+            || $e instanceof \App\Http\Exception\UnauthorizedException
+        ) {
             $errorDto = new ErrorDto(
                 Response::HTTP_FORBIDDEN,
                 '권한이 없습니다.',
@@ -95,7 +114,9 @@ class Handler extends ExceptionHandler
             );
         }
 
-        if ($e instanceof ValidationException) {
+        if ($e instanceof ValidationException
+            || $e instanceof \App\Http\Exception\UnprocessableEntityException
+        ) {
             $errorDto = new ErrorDto(
                 Response::HTTP_UNPROCESSABLE_ENTITY,
                 '유효하지 않은 데이터입니다.',
@@ -125,5 +146,10 @@ class Handler extends ExceptionHandler
         }
 
         return [0, ''];
+    }
+
+    private function notifyException(DomainException $e)
+    {
+        // TODO @appkr Implement report logic
     }
 }

@@ -3,16 +3,20 @@
 namespace App\Http\Controllers\Reviews;
 
 use App\Http\Controllers\Controller;
+use App\Http\Exception\ConflictException;
 use App\Http\Requests\Review\CreateReviewRequest;
 use App\Http\Requests\Review\DeleteReviewRequest;
 use App\Http\Requests\Review\ListReviewRequest;
 use App\Http\Requests\Review\UpdateReviewRequest;
 use App\Transformers\ReviewTransformer;
 use Appkr\Api\Http\Response as Presenter;
+use DB;
+use Exception;
 use Illuminate\Http\Response;
 use Myshop\Application\Service\ReviewService;
 use Myshop\Domain\Repository\ProductRepository;
 use Myshop\Domain\Repository\ReviewRepository;
+use Myshop\Infrastructure\Exception\OptimisticLockingFailureException;
 
 class ReviewController extends Controller
 {
@@ -198,7 +202,7 @@ class ReviewController extends Controller
      */
     public function store(CreateReviewRequest $request, int $productId)
     {
-        $product = $this->productRepository->findById($productId);
+        $product = $this->productRepository->findById((int) $productId);
 
         $review = $this->reviewService->createReview(
             $product, $request->user(), $request->getReviewDto()
@@ -261,31 +265,44 @@ class ReviewController extends Controller
      * @param int $productId
      * @param int $reviewId
      * @return \Illuminate\Contracts\Http\Response
+     * @throws Exception
      */
     public function update(
         UpdateReviewRequest $request,
         int $productId,
         int $reviewId
     ) {
-        $product = $this->productRepository->findById($productId);
+        DB::beginTransaction();
 
-        // [선점잠금] 레코드를 조회하고 잠급니다.
-        // $review = $this->reviewRepository->findByIdWithLock($reviewId, $product);
+        try {
+            $product = $this->productRepository->findById((int) $productId);
 
-        // [선점잠금] PoC를 위해 강제로 잠금을 연장합니다.
-        // 선점한 프로세스 A가 끝나고 DB 잠금이 풀리면, 다음 프로세스 B를 처리합니다.
-        // sleep(10);
+            // [선점잠금] 레코드를 조회하고 잠급니다.
+            // $review = $this->reviewRepository->findByIdWithLock($reviewId, $product);
 
-        // [비선점잠금]
-        // 조회시점 대비 DB의 버전이 같은지를 확인하여 변경 가능 여부를 판단합니다.
-        $review = $this->reviewRepository->findById($reviewId, $product);
+            // [선점잠금] PoC를 위해 강제로 잠금을 연장합니다.
+            // 선점한 프로세스 A가 끝나고 DB 잠금이 풀리면, 다음 프로세스 B를 처리합니다.
+            // sleep(10);
 
-        // Request에서는 리뷰 작성자를 식별할 수 없어서 컨트롤러에서 접근 권한 검사 합니다.
-        $this->authorize('update', $review);
+            // [비선점잠금]
+            // 조회시점 대비 DB의 버전이 같은지를 확인하여 변경 가능 여부를 판단합니다.
+            $review = $this->reviewRepository->findById($reviewId, $product);
 
-        $review = $this->reviewService->modifyReview(
-            $review, $request->getReviewDto()
-        );
+            // Request에서는 리뷰 작성자를 식별할 수 없어서 컨트롤러에서 접근 권한 검사 합니다.
+            $this->authorize('update', $review);
+
+            $review = $this->reviewService->modifyReview(
+                $review, $request->getReviewDto()
+            );
+
+            DB::commit();
+        } catch (OptimisticLockingFailureException $e) {
+            DB::rollBack();
+            throw new ConflictException($e);
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
 
         return $this->presenter->withItem($review, new ReviewTransformer);
     }
@@ -335,6 +352,7 @@ class ReviewController extends Controller
      * @param int $productId
      * @param int $reviewId
      * @return \Illuminate\Contracts\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(
         DeleteReviewRequest $request,
