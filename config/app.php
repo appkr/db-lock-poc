@@ -136,7 +136,6 @@ return [
     */
 
     'providers' => [
-
         /*
          * Laravel Framework Service Providers...
          */
@@ -166,10 +165,6 @@ return [
         /*
          * Package Service Providers...
          */
-        Laravel\Tinker\TinkerServiceProvider::class,
-        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
-        Appkr\Api\ApiServiceProvider::class,
-        Barryvdh\Cors\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -183,8 +178,6 @@ return [
         // NOTE This should be placed after RouteServiceProvider
         App\Providers\CustomLogServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
-
-        L5Swagger\L5SwaggerServiceProvider::class,
     ],
 
     /*
