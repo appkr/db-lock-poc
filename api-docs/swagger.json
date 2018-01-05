@@ -864,6 +864,11 @@
                     "description": "\uc5d0\ub7ec \ub514\ud14c\uc77c",
                     "type": "string",
                     "example": "\ud544\uc218\uac12\uc774 \ub204\ub77d\ub418\uc5c8\uc2b5\ub2c8\ub2e4"
+                },
+                "exceptionId": {
+                    "description": "\uc5d0\ub7ec \ubc88\ud638",
+                    "type": "string",
+                    "example": "02bf6f6b461c47d9b309e6651d07dd19"
                 }
             },
             "type": "object"

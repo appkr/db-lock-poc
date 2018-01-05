@@ -30,11 +30,22 @@ final class ErrorDto implements JsonSerializable
      */
     private $description;
 
-    public function __construct(int $code = 0, string $message = '', string $description = '')
-    {
+    /**
+     * @SWG\Property(description="에러 번호", example="02bf6f6b461c47d9b309e6651d07dd19")
+     * @var string $exceptionId
+     */
+    private $exceptionId;
+
+    public function __construct(
+        int $code = 0,
+        string $message = '',
+        string $description = '',
+        string $exceptionId = null
+    ) {
         $this->code = $code;
         $this->message = $message;
         $this->description = $description;
+        $this->exceptionId = $exceptionId;
     }
 
     /**
@@ -50,6 +61,7 @@ final class ErrorDto implements JsonSerializable
             'code' => $this->code,
             'message' => $this->message,
             'description' => $this->description,
+            'exceptionId' => $this->exceptionId,
         ];
     }
 
@@ -81,5 +93,15 @@ final class ErrorDto implements JsonSerializable
     public function setDescription(string $description)
     {
         $this->description = $description;
+    }
+
+    public function getExceptionId()
+    {
+        return $this->exceptionId;
+    }
+
+    public function setExceptionId(string $exceptionId)
+    {
+        $this->exceptionId = $exceptionId;
     }
 }

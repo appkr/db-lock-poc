@@ -94,7 +94,6 @@ class UpdateProductController extends Controller
             // sleep(10);
 
             $product = $service->modifyProduct($product, $request->getProductDto());
-
             DB::commit();
         } catch (OptimisticLockingFailureException $e) {
             DB::rollBack();

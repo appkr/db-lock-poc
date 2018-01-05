@@ -6,6 +6,7 @@ use App\Http\Exception\UnauthenticatedException;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
@@ -14,6 +15,7 @@ use Illuminate\Validation\ValidationException;
 use Myshop\Common\Dto\ErrorDto;
 use Myshop\Common\Exception\DomainException;
 use Myshop\Common\Exception\LogLevel;
+use Raven_Client;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\InvalidClaimException;
@@ -25,6 +27,14 @@ use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
 
 class Handler extends ExceptionHandler
 {
+    private $sentry;
+
+    public function __construct(Container $container, Raven_Client $sentry)
+    {
+        parent::__construct($container);
+        $this->sentry = $sentry;
+    }
+
     protected $dontReport = [
         AuthenticationException::class,
         AuthorizationException::class,
@@ -76,12 +86,13 @@ class Handler extends ExceptionHandler
         $code = method_exists($e, 'getStatusCode')
             ? $e->getStatusCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
         $description = $e->getMessage() ?? 'Unknown Error';
+        $exceptionId = $this->sentry->getLastEventID();
 
-        $errorDto = new ErrorDto($code, '알 수 없는 오류가 발생했습니다.', $description);
+        $errorDto = new ErrorDto($code, '알 수 없는 오류가 발생했습니다.', $description, $exceptionId);
 
         if ($e instanceof JWTException) {
             list($code, $message) = $this->mapJwtException($e);
-            $errorDto = new ErrorDto($code, $message, $e->getMessage());
+            $errorDto = new ErrorDto($code, $message, $e->getMessage(), $exceptionId);
         }
 
         if ($e instanceof UnauthorizedHttpException
@@ -91,7 +102,8 @@ class Handler extends ExceptionHandler
             $errorDto = new ErrorDto(
                 Response::HTTP_UNAUTHORIZED,
                 '사용자를 식별할 수 없습니다.',
-                $e->getMessage()
+                $e->getMessage(),
+                $exceptionId
             );
         }
 
@@ -102,7 +114,8 @@ class Handler extends ExceptionHandler
             $errorDto = new ErrorDto(
                 Response::HTTP_FORBIDDEN,
                 '권한이 없습니다.',
-                $e->getMessage()
+                $e->getMessage(),
+                $exceptionId
             );
         }
 
@@ -110,7 +123,8 @@ class Handler extends ExceptionHandler
             $errorDto = new ErrorDto(
                 Response::HTTP_NOT_FOUND,
                 '요청하신 리소스를 찾을 수 없습니다.',
-                $e->getMessage()
+                $e->getMessage(),
+                $exceptionId
             );
         }
 
@@ -120,7 +134,8 @@ class Handler extends ExceptionHandler
             $errorDto = new ErrorDto(
                 Response::HTTP_UNPROCESSABLE_ENTITY,
                 '유효하지 않은 데이터입니다.',
-                $e->validator->getMessageBag()->first()
+                $e->validator->getMessageBag()->first(),
+                $exceptionId
             );
         }
 
@@ -150,6 +165,10 @@ class Handler extends ExceptionHandler
 
     private function notifyException(DomainException $e)
     {
-        // TODO @appkr Implement report logic
+        $sentryInstalled = $this->container->bound(Raven_Client::class);
+
+        if ($sentryInstalled) {
+            $this->sentry->captureException($e);
+        }
     }
 }

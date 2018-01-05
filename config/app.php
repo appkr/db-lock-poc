@@ -165,6 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
+        App\Providers\SentryServiceProvider::class,
 
         /*
          * Application Service Providers...
