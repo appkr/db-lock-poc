@@ -25,8 +25,7 @@ class HealthController extends Controller
             'HOST' => gethostname(),
             'APP_ENV' => env('APP_ENV', 'local'),
             'APP_DEBUG' => env('APP_DEBUG', 'true'),
-            // TODO @appkr Duplicate. Move APP_VERSION to .env and Write it dynamically
-            'APP_VERSION' => trim(exec('git log --pretty="%h" -n1 HEAD')),
+            'APP_VERSION' => env('APP_VERSION', trim(exec('git log --pretty="%h" -n1 HEAD'))),
             'APP_URL' => Request::getHttpHost(),
             'DATABASE' => $databaseError ?: 'OKAY',
         ], $statusCode);

@@ -21,7 +21,8 @@ class CustomLogServiceProvider extends ServiceProvider
         $request = $this->app->make(Request::class);
         $monolog->pushProcessor(function (array $record) use ($request){
             try {
-                // TODO @appkr Add more if required
+                $record['extra']['instanceId'] = env('EC2_INSTANCE_ID', gethostname());
+                $record['extra']['version'] = env('APP_VERSION', trim(exec('git log --pretty="%h" -n1 HEAD')));
                 $record['extra']['fingerprint'] = $request->fingerprint();
             } catch (\RuntimeException $e) {
                 // 웹 요청일때만 Request 인스턴스에서 핑거프린트를 구할 수 있습니다.
