@@ -245,6 +245,26 @@ Test Cases(TC)|Observations
 
 ![](docs/api-docs.png)
 
+---
+
+# 배포
+
+Elastic Beanstalk.
+
+```bash
+~/db-lock-poc $ eb --version
+# EB CLI 3.12.1 (Python 2.7.1)
+~/db-lock-poc $ composer install
+~/db-lock-poc $ eb deploy <ENV_NAME> --label <vX.Y.Z> --timeout 30 --profile <YOUR_AWS_PROFILE>
+```
+
+SSH into the instance and Regenerate Swagger docs.
+
+```bash
+~/db-lock-poc $ eb ssh <ENV_NAME> --profile <YOUR_AWS_PROFILE>
+[ec2-user@ip-w-x-y-z]$ sudo -E -u webapp php /var/app/current/artisan l5-swagger:generate
+```
+
 ## Sponsor
 
 [Jetbrains](https://www.jetbrains.com/) 사에서 IntelliJ IDE를 제공해주셨습니다.

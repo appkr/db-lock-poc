@@ -1,0 +1,29 @@
+/intellij_logo.png
+/node_modules
+/public/storage
+/.env
+/.idea
+/_ide_helper.php
+/.phpstorm.meta.php
+/.travis.yml
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+storage/logs/**
+!storage/logs/.*
+storage/framework/views/**/*.php
+storage/framework/cache/**/*
+storage/framework/sessions/**/*
+storage/framework/testing/**/*
+!storage/framework/views/.*
+!storage/framework/cache/.*
+!storage/framework/sessions/.*
+!storage/framework/testing/.*
+
+# Docker files
+Dockerfile
+.dockerignore
+dockerfiles
