@@ -13,6 +13,8 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
+        // TODO @appkr 크론 작동을 확인하기 위한 커맨드
+        $schedule->command('inspire')->everyMinute()->withoutOverlapping();
     }
 
     protected function commands()

@@ -40,7 +40,7 @@ class SentryContext
             ]);
         }
 
-        $this->sentry->tags_context(['foo' => 'bar']);
+        $this->sentry->tags_context(['instance' => env('EC2_INSTANCE_ID', gethostname())]);
 
         return $next($request);
     }
