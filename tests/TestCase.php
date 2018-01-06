@@ -3,6 +3,8 @@
 namespace TestSuite;
 
 use App;
+use App\Exceptions\Handler;
+use Exception;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -22,6 +24,37 @@ abstract class TestCase extends BaseTestCase
     /** @var User $tester */
     protected $tester;
 
+    /**
+     * {@inheritdoc}
+     */
+    public function expectException($e)
+    {
+        $this->disableExceptionHandling();
+        parent::expectException($e);
+
+        return $this;
+    }
+
+    protected function disableExceptionHandling()
+    {
+        $this->app->instance(Handler::class, new class extends Handler {
+            public function __construct()
+            {
+            }
+
+            public function report(Exception $e)
+            {
+            }
+
+            public function render($request, Exception $e)
+            {
+                throw $e;
+            }
+        });
+
+        return $this;
+    }
+
     protected function seedRolesAndPermissions()
     {
         App::make(PermissionService::class)->createAllPermissions();
@@ -36,9 +69,9 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * @param array $overrides {
-     *     @var string $name
-     *     @var string $email
-     *     @var string $password
+     * @var string $name
+     * @var string $email
+     * @var string $password
      * }
      * @param array|Role[] $roles
      * @param array|Permission[] $permissions
@@ -47,7 +80,8 @@ abstract class TestCase extends BaseTestCase
         array $overrides = [],
         array $roles = [],
         array $permissions = []
-    ) {
+    )
+    {
         $attributes = array_merge([
             'name' => 'User',
             'email' => 'user@example.com',
@@ -79,7 +113,8 @@ abstract class TestCase extends BaseTestCase
      */
     protected function createAdmin(
         array $permissions = []
-    ) {
+    )
+    {
         $attributes = [
             'name' => 'Admin',
             'email' => 'admin@example.com',
@@ -94,7 +129,8 @@ abstract class TestCase extends BaseTestCase
      */
     protected function createMember(
         array $permissions = []
-    ) {
+    )
+    {
         $attributes = [
             'name' => 'Member',
             'email' => 'member@example.com',

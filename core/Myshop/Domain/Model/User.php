@@ -196,6 +196,8 @@ class User extends Authenticatable implements JWTSubject, HasRoleAndPermission
                 'id' => $this->id,
                 'name' => $this->name,
                 'email' => $this->email,
+                'roles' => $this->roles->implode('name', ','),
+                'permissions' => $this->permissions->implode('name', ','),
             ]
         ];
     }

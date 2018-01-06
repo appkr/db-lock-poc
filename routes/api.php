@@ -178,7 +178,7 @@ Route::prefix('api/auth')->middleware([ThrottleRequests::class.':60,1'])->group(
 
 Route::prefix('api/v1')->middleware([
     ValidateApiUser::class,
-    ThrottleRequests::class . ':60,1',
+    ThrottleRequests::class.':60,1',
 ])->group(function () {
     // 상품 라우트
     Route::prefix('products')->group(function () {
@@ -199,7 +199,14 @@ Route::prefix('api/v1')->middleware([
 
     // 리뷰 라우트
     // NOTE. 권한 검사는 ReviewPolicy 클래스에서 처리합니다.
-    Route::resource('products.reviews', ReviewController::class, [
-        'only' => ['index', 'store', 'update', 'destroy'],
-    ]);
+    Route::prefix('products/{productId}/reviews')->group(function () {
+        // 리뷰 목록
+        Route::get('/', ReviewController::class.'@index');
+        // 리뷰 등록
+        Route::post('/', ReviewController::class.'@store');
+        // 리뷰 수정
+        Route::put('/{reviewId}', ReviewController::class.'@update');
+        // 리뷰 삭제
+        Route::delete('/{reviewId}', ReviewController::class.'@destroy');
+    });
 });
