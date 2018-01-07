@@ -9,6 +9,7 @@
         "appkr/api": "3.0.*",
         "barryvdh/laravel-cors": "^0.10.1",
         "darkaonline/l5-swagger": "5.5.*",
+        "doctrine/dbal": "^2.5",
         "fideloper/proxy": "~3.3",
         "guzzlehttp/guzzle": "^6.2",
         "laravel/framework": "5.5.*",

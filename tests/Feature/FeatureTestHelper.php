@@ -30,6 +30,7 @@ class FeatureTestHelper extends TestCase
      *     @var string $email
      *     @var string $password
      * }
+     * @throws \Exception
      */
     protected function login(array $overrides = [])
     {

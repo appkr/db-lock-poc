@@ -31,7 +31,7 @@ final class ErrorDto implements JsonSerializable
     private $description;
 
     /**
-     * @SWG\Property(description="에러 번호", example="02bf6f6b461c47d9b309e6651d07dd19")
+     * @SWG\Property(description="에러 고유 번호", example="02bf6f6b461c47d9b309e6651d07dd19")
      * @var string $exceptionId
      */
     private $exceptionId;
@@ -40,7 +40,7 @@ final class ErrorDto implements JsonSerializable
         int $code = 0,
         string $message = '',
         string $description = '',
-        string $exceptionId = null
+        string $exceptionId = ''
     ) {
         $this->code = $code;
         $this->message = $message;

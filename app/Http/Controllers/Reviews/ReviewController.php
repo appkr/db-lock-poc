@@ -298,7 +298,7 @@ class ReviewController extends Controller
             DB::commit();
         } catch (OptimisticLockingFailureException $e) {
             DB::rollBack();
-            throw new ConflictException($e);
+            throw new ConflictException($e->getMessage(), $e);
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;

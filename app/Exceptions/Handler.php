@@ -47,11 +47,13 @@ class Handler extends ExceptionHandler
     public function report(Exception $e)
     {
         if ($e instanceof DomainException) {
+            // NOTE. Sentry Reporting 전송 여부 판단은 DomainException::getLogLevel() 반환값에 의존합니다.
             if ($e->getLogLevel()->getValue() <= LogLevel::ERROR) {
                 $this->notifyException($e);
             }
         }
 
+        // NOTE. 라라벨 기본 로그에 로깅 여부 판단은 env('APP_LOG_LEVEL') 값에 의존합니다.
         parent::report($e);
     }
 
@@ -85,10 +87,11 @@ class Handler extends ExceptionHandler
     {
         $code = method_exists($e, 'getStatusCode')
             ? $e->getStatusCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
-        $description = $e->getMessage() ?? 'Unknown Error';
-        $exceptionId = $this->sentry->getLastEventID();
+        // NOTE. $message 짤막한 메시지, $description 상세한 메시지
+        $message = $e->getMessage() ?? '알 수 없는 오류가 발생했습니다.';
+        $exceptionId = $this->sentry->getLastEventID() ?: '';
 
-        $errorDto = new ErrorDto($code, '알 수 없는 오류가 발생했습니다.', $description, $exceptionId);
+        $errorDto = new ErrorDto($code, $message, '', $exceptionId);
 
         if ($e instanceof JWTException) {
             list($code, $message) = $this->mapJwtException($e);

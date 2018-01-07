@@ -12,6 +12,8 @@ use Myshop\Application\Service\PermissionService;
 use Myshop\Application\Service\RoleService;
 use Myshop\Common\Model\DomainPermission;
 use Myshop\Common\Model\DomainRole;
+use Myshop\Domain\Model\Permission;
+use Myshop\Domain\Model\Role;
 use Myshop\Domain\Model\User;
 use Myshop\Domain\Repository\RoleRepository;
 
@@ -69,9 +71,10 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * @param array $overrides {
-     * @var string $name
-     * @var string $email
-     * @var string $password
+     *     @var string $name
+     *     @var string $email
+     *     @var string $password
+     *     @var array $allowed_ips
      * }
      * @param array|Role[] $roles
      * @param array|Permission[] $permissions
@@ -86,6 +89,7 @@ abstract class TestCase extends BaseTestCase
             'name' => 'User',
             'email' => 'user@example.com',
             'password' => 'secret',
+            'allowed_ips' => ['*'],
         ], $overrides);
 
         if (isset($attributes['password'])) {

@@ -3,12 +3,21 @@
 namespace Myshop\Infrastructure\Eloquent;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 use Myshop\Common\Model\QueryOperator;
 use Myshop\Domain\Model\User;
 use Myshop\Domain\Repository\UserRepository;
 
 class EloquentUserRepository implements UserRepository
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function all(): Collection
+    {
+        return User::all();
+    }
+
     /**
      * {@inheritdoc}
      * @throws ModelNotFoundException
