@@ -11,6 +11,7 @@ use Myshop\Domain\Repository\ReviewRepository;
 use Myshop\Domain\Repository\RoleRepository;
 use Myshop\Domain\Repository\UserRepository;
 use Myshop\Infrastructure\Cache\CachedPermissionRepository;
+use Myshop\Infrastructure\Cache\CachedRoleRepository;
 use Myshop\Infrastructure\Eloquent\EloquentPermissionRepository;
 use Myshop\Infrastructure\Eloquent\EloquentProductRepository;
 use Myshop\Infrastructure\Eloquent\EloquentReviewRepository;
@@ -42,17 +43,17 @@ class RepositoryServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(PermissionRepository::class, function (Application $app) {
-            $cacheInstance = $app->make(CacheRepository::class);
             $baseRepository = $app->make(EloquentPermissionRepository::class);
+            $cacheInstance = $app->make(CacheRepository::class);
 
             return new CachedPermissionRepository($baseRepository, $cacheInstance);
         });
 
         $this->app->bind(RoleRepository::class, function (Application $app) {
-            $cacheInstance = $app->make(CacheRepository::class);
             $baseRepository = $app->make(EloquentRoleRepository::class);
+            $cacheInstance = $app->make(CacheRepository::class);
 
-            return new EloquentRoleRepository($cacheInstance);
+            return new CachedRoleRepository($baseRepository, $cacheInstance);
         });
     }
 }
