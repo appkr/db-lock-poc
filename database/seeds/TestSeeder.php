@@ -32,7 +32,8 @@ class TestSeeder extends Seeder
         $this->createUser('Admin', 'admin@example.com', DomainRole::ADMIN());
         $this->createUser('Member', 'member@example.com', DomainRole::MEMBER());
         $this->createUser('User', 'user@example.com', DomainRole::USER());
-        $this->command->line('=> 새 사용자를 3명을 만들었습니다.');
+        $this->createUser('Stranger', 'stranger@example.com', DomainRole::MEMBER(), 'secret', ['10.10.10.10/32']);
+        $this->command->line('=> 새 사용자를 4명을 만들었습니다.');
 
         $this->command->line('>>> 새 상품을 만듭니다.');
         $this->createProduct($noOfProducts = 25);
@@ -56,12 +57,14 @@ class TestSeeder extends Seeder
         string $name,
         string $email,
         DomainRole $roleName,
-        string $password = 'secret'
+        string $password = 'secret',
+        array $allowedIps = ['*']
     ) {
         $user = User::forceCreate([
             'name' => $name,
             'email' => $email,
             'password' => bcrypt($password),
+            'allowed_ips' => $allowedIps,
         ]);
 
         $role = $this->roleRepository->findByName($roleName);

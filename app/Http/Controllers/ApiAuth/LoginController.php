@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\ApiAuth;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\ApiAuth\LoginRequest;
+use App\Policies\ClientContextPolicy;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 use Tymon\JWTAuth\JWTGuard;
@@ -35,17 +36,21 @@ class LoginController extends Controller
      *     )
      * )
      *
-     * @param Request $request
+     * @param LoginRequest $request
      * @param JWTGuard $guard
+     * @param ClientContextPolicy $policy
      * @return \Illuminate\Http\JsonResponse
      */
-    final public function __invoke(Request $request, JWTGuard $guard)
-    {
+    final public function __invoke(
+        LoginRequest $request,
+        JWTGuard $guard,
+        ClientContextPolicy $policy
+    ) {
         $credentials = $request->only('email', 'password');
 
         if ($token = $guard->attempt($credentials)) {
+            $policy->check($guard->user(), $request->getAdditionalUserContext());
             $ttlInSec = $guard->factory()->getTTL() * 60;
-
             return $this->respondWithToken($token, $ttlInSec);
         }
 

@@ -1,16 +1,14 @@
 .DS_Store
 /eb-hooks
 /node_modules
-/public/hot
 /public/storage
 /storage/*.key
 /vendor
 /.idea
 /.vagrant
-Homestead.json
-Homestead.yaml
+/.env
+/composer.phar
 npm-debug.log
-.env
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

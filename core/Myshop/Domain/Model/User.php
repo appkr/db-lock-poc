@@ -69,6 +69,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string $remember_token
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property array $allowed_ips
  * @property-read Collection|Review[] $reviews
  * @property-read Collection|Role[] $roles
  * @property-read Collection|Permission[] $permissions
@@ -82,12 +83,16 @@ class User extends Authenticatable implements JWTSubject, HasRoleAndPermission
     ];
 
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'allowed_ips',
     ];
 
     protected $with = [
         'roles',
         'permissions',
+    ];
+
+    protected $casts = [
+        'allowed_ips' => 'array',
     ];
 
     // REGISTER MODEL OBSERVERS
@@ -117,6 +122,17 @@ class User extends Authenticatable implements JWTSubject, HasRoleAndPermission
 
     // QUERY SCOPE
     // ACCESSOR & MUTATOR
+
+    public function getAllowedIpsAttribute(string $allowedIps)
+    {
+        return (array) json_decode($allowedIps ?: ['*']);
+    }
+
+    public function setAllowedIpsAttribute(array $allowedIps = [])
+    {
+        $this->attributes['allowed_ips'] = json_encode($allowedIps);
+    }
+
     // DOMAIN LOGIC
     // INTERFACE IMPLEMENTATION
 

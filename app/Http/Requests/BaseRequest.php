@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Myshop\Common\Dto\AdditionalUserContextDto;
 use Myshop\Common\Model\Money;
 
 class BaseRequest extends FormRequest
@@ -20,7 +21,7 @@ class BaseRequest extends FormRequest
      * @param callable|null $filter 조회한 입력값을 추가 조작하기 위한 필터.
      * @return array|null|string
      */
-    protected function getValue(string $key, $default = null, callable $filter = null)
+    public function getValue(string $key, $default = null, callable $filter = null)
     {
         // User Action        => User Intent
         // 1. key NOT PRESENT => key의 값을 바꾸거나 조회 쿼리에 사용할 의도가 없음
@@ -39,7 +40,12 @@ class BaseRequest extends FormRequest
         return call_user_func($filter, $value);
     }
 
-    protected function getBoolean(string $key, $default = null)
+    /**
+     * @param string $key
+     * @param bool|null $default
+     * @return bool|null
+     */
+    public function getBoolean(string $key, $default = null)
     {
         return $this->getValue($key, $default, function ($value) {
             if (is_null($value)) {
@@ -50,10 +56,27 @@ class BaseRequest extends FormRequest
         });
     }
 
-    protected function getMoney(string $key, $default = null)
+    /**
+     * @param string $key
+     * @param int|string|null $default
+     * @return Money|null
+     */
+    public function getMoney(string $key, $default = null)
     {
         return $this->getValue($key, $default, function ($value) {
             return is_null($value) ? null : new Money($value);
         });
+    }
+
+    /**
+     * @return AdditionalUserContextDto
+     */
+    public function getAdditionalUserContext()
+    {
+        return new AdditionalUserContextDto(
+            $this->getHost(),
+            $this->getClientIp(),
+            $this->header('user-agent')
+        );
     }
 }

@@ -15,6 +15,7 @@ use App\Http\Controllers\Products\{
 use App\Http\Controllers\Reviews\ReviewController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Middleware\CheckPermission;
+use App\Http\Middleware\ClientContextGuard;
 use App\Http\Middleware\ValidateApiUser;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Myshop\Common\Model\DomainPermission;
@@ -166,9 +167,9 @@ Route::prefix('api/auth')->middleware([ThrottleRequests::class.':60,1'])->group(
     // 로그인
     Route::post('login', LoginController::class);
     // 토큰 갱신
-    Route::post('refresh', RefreshController::class);
+    Route::post('refresh', RefreshController::class)->middleware(ClientContextGuard::class);
 
-    Route::middleware([ValidateApiUser::class])->group(function () {
+    Route::middleware([ValidateApiUser::class, ClientContextGuard::class])->group(function () {
         // 로그아웃
         Route::post('logout', LogoutController::class);
         // 내 정보
@@ -178,6 +179,7 @@ Route::prefix('api/auth')->middleware([ThrottleRequests::class.':60,1'])->group(
 
 Route::prefix('api/v1')->middleware([
     ValidateApiUser::class,
+    ClientContextGuard::class,
     ThrottleRequests::class.':60,1',
 ])->group(function () {
     // 상품 라우트
