@@ -36,11 +36,11 @@ class TestSeeder extends Seeder
         $this->command->line('=> 새 사용자를 4명을 만들었습니다.');
 
         $this->command->line('>>> 새 상품을 만듭니다.');
-        $this->createProduct($noOfProducts = 25);
+        $this->createProduct($noOfProducts = 10000);
         $this->command->line("=> 새 상품 {$noOfProducts}개를 만들었습니다.");
 
         $this->command->line('>>> 새 리뷰를 만듭니다.');
-        $this->createReview($noOfReviews = 2);
+        $this->createReview($noOfReviews = 1);
         $this->command->line("=> 각 상품당 {$noOfReviews}개씩의 새 리뷰를 만들었습니다.");
     }
 
