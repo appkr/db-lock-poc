@@ -78,6 +78,8 @@ class User extends Authenticatable implements JWTSubject, HasRoleAndPermission
 {
     use Notifiable;
 
+    const DEFAULT_USER_ID = 1;
+
     protected $fillable = [
         'name', 'email', 'password',
     ];
@@ -216,5 +218,18 @@ class User extends Authenticatable implements JWTSubject, HasRoleAndPermission
                 'permissions' => $this->permissions->implode('name', ','),
             ]
         ];
+    }
+
+    // HELPERS
+
+    public static function createDefaultUser(array $attributes = [])
+    {
+        $attributes = array_merge([
+            'id' => static::DEFAULT_USER_ID,
+            'name' => 'UNKNOWN',
+            'email' => 'unknown@example.com',
+        ], $attributes);
+
+        return new static($attributes);
     }
 }

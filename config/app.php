@@ -26,6 +26,7 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
+    'version' => env('APP_VERSION', trim(exec('git log --pretty="%h" -n1 HEAD'))),
 
     /*
     |--------------------------------------------------------------------------
@@ -165,6 +166,7 @@ return [
         /*
          * Package Service Providers...
          */
+        App\Providers\ApplicationContextServiceProvider::class,
         App\Providers\SentryServiceProvider::class,
 
         /*
