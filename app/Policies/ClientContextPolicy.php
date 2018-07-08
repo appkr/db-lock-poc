@@ -2,29 +2,35 @@
 
 namespace App\Policies;
 
+use App\ApplicationContext;
 use App\Http\Exception\NotAllowedIpException;
-use Myshop\Common\Dto\AdditionalUserContextDto;
 use Myshop\Domain\Model\User;
 use Symfony\Component\HttpFoundation\IpUtils;
 
 class ClientContextPolicy
 {
-    public function check(User $user, AdditionalUserContextDto $dto)
+    private $appContext;
+
+    public function __construct(ApplicationContext $appContext)
     {
-        $this->checkUserIp($user, $dto);
-        // TODO @appkr Add additional check if required, e.g. checkUserAgent()
+        $this->appContext = $appContext;
     }
 
-    private function checkUserIp(User $user, AdditionalUserContextDto $dto)
+    public function check()
+    {
+        $user = $this->appContext->getUser();
+        $clientIp = $this->appContext->getClientIp();
+        $this->checkUserIp($user, $clientIp);
+    }
+
+    private function checkUserIp(User $user, $clientIp)
     {
         $allowedIps = $user->allowed_ips ?: ['*'];
-
         if (in_array('*', $allowedIps, true)) {
             return;
         }
 
-        $accessAllowed = IpUtils::checkIp($dto->getClientIp(), $allowedIps);
-
+        $accessAllowed = IpUtils::checkIp($clientIp, $allowedIps);
         if (! $accessAllowed) {
             throw new NotAllowedIpException;
         }

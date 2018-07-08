@@ -125,9 +125,16 @@ class User extends Authenticatable implements JWTSubject, HasRoleAndPermission
     // QUERY SCOPE
     // ACCESSOR & MUTATOR
 
-    public function getAllowedIpsAttribute(string $allowedIps)
+    /**
+     * @param string|null $allowedIps
+     * @return array
+     */
+    public function getAllowedIpsAttribute($allowedIps)
     {
-        return (array) json_decode($allowedIps ?: ['*']);
+        if (null === $allowedIps) {
+            return ['*'];
+        }
+        return (array) json_decode($allowedIps);
     }
 
     public function setAllowedIpsAttribute(array $allowedIps = [])

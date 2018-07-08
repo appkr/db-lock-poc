@@ -70,7 +70,12 @@ class ApplicationContext
         return $this->get('user');
     }
 
-    public function getClientIp(): string
+    public function setUser(User $user)
+    {
+        $this->set('user', $user);
+    }
+
+    public function getClientIp()
     {
         return $this->get('clientIp');
     }

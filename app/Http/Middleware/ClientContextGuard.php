@@ -5,8 +5,6 @@ namespace App\Http\Middleware;
 use App\Policies\ClientContextPolicy;
 use Closure;
 use Illuminate\Http\Request;
-use Myshop\Common\Dto\AdditionalUserContextDto;
-use Myshop\Domain\Model\User;
 use Tymon\JWTAuth\JWTGuard;
 
 class ClientContextGuard
@@ -22,17 +20,8 @@ class ClientContextGuard
 
     public function handle(Request $request, Closure $next)
     {
-        // NOTE. ValidateApiUser 미들웨어보다 뒤에 위치해야 Null Pointer가 발생하지 않습니다.
         if ($this->guard->check()) {
-            /** @var User $user */
-            $user = $this->guard->user();
-            $userContext = new AdditionalUserContextDto(
-                $request->getHost(),
-                $request->getClientIp(),
-                $request->header('user-agent')
-            );
-
-            $this->clientContextPolicy->check($user, $userContext);
+            $this->clientContextPolicy->check();
         }
 
         return $next($request);

@@ -49,7 +49,7 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         if ($token = $guard->attempt($credentials)) {
-            $policy->check($guard->user(), $request->getAdditionalUserContext());
+            $policy->check();
             $ttlInSec = $guard->factory()->getTTL() * 60;
             return $this->respondWithToken($token, $ttlInSec);
         }
