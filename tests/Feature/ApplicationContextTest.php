@@ -51,13 +51,14 @@ class ApplicationContextTest extends \TestSuite\TestCase
 
     public function testGetTraceNumber()
     {
-        $this->assertEquals(0, $this->appContext->getTraceNumber());
+        $this->assertNotEmpty($this->appContext->getTraceNumber());
     }
 
     public function testIncreaseTraceNumber()
     {
+        $traceNumber = $this->appContext->getTraceNumber();
         $this->appContext->increaseTraceNumber();
-        $this->assertEquals(1, $this->appContext->getTraceNumber());
+        $this->assertEquals($traceNumber + 1, $this->appContext->getTraceNumber());
     }
 
     public function testSucceedPreviousContext()
