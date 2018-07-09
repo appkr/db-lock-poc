@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Myshop\Common\Dto\AdditionalUserContextDto;
 use Myshop\Common\Model\Money;
 
 class BaseRequest extends FormRequest
@@ -66,17 +65,5 @@ class BaseRequest extends FormRequest
         return $this->getValue($key, $default, function ($value) {
             return is_null($value) ? null : new Money($value);
         });
-    }
-
-    /**
-     * @return AdditionalUserContextDto
-     */
-    public function getAdditionalUserContext()
-    {
-        return new AdditionalUserContextDto(
-            $this->getHost(),
-            $this->getClientIp(),
-            $this->header('user-agent')
-        );
     }
 }

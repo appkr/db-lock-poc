@@ -2,11 +2,11 @@
 
 namespace App\Exceptions;
 
+use App\ApplicationContext;
 use App\Http\Exception\UnauthenticatedException;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Response;
@@ -15,7 +15,7 @@ use Illuminate\Validation\ValidationException;
 use Myshop\Common\Dto\ErrorDto;
 use Myshop\Common\Exception\DomainException;
 use Myshop\Common\Exception\LogLevel;
-use Raven_Client;
+use Sentry\SentryLaravel\SentryFacade;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\InvalidClaimException;
@@ -28,12 +28,6 @@ use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
 class Handler extends ExceptionHandler
 {
     private $sentry;
-
-    public function __construct(Container $container, Raven_Client $sentry)
-    {
-        parent::__construct($container);
-        $this->sentry = $sentry;
-    }
 
     protected $dontReport = [
         AuthenticationException::class,
@@ -61,8 +55,7 @@ class Handler extends ExceptionHandler
     {
         if ($request->is('api/*')) {
             $errorDto = $this->mapException($e);
-
-            return response()->json($errorDto, $errorDto->getCode());
+            return \Response::json($errorDto, $errorDto->getCode());
         }
 
         return parent::render($request, $e);
@@ -77,10 +70,10 @@ class Handler extends ExceptionHandler
                 $e->getMessage()
             );
 
-            return response()->json($errorDto, $errorDto->getCode());
+            return \Response::json($errorDto, $errorDto->getCode());
         }
 
-        return redirect()->guest(route('login'));
+        return \Redirect::guest(route('login'));
     }
 
     private function mapException(Exception $e)
@@ -89,10 +82,9 @@ class Handler extends ExceptionHandler
             ? $e->getStatusCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
         // NOTE. $message 짤막한 메시지, $description 상세한 메시지
         $message = $e->getMessage() ?? '알 수 없는 오류가 발생했습니다.';
-        $exceptionId = $this->sentry->getLastEventID() ?: '';
+        $exceptionId = SentryFacade::getLastEventID() ?: '';
 
         $errorDto = new ErrorDto($code, $message, '', $exceptionId);
-
         if ($e instanceof JWTException) {
             list($code, $message) = $this->mapJwtException($e);
             $errorDto = new ErrorDto($code, $message, $e->getMessage(), $exceptionId);
@@ -150,15 +142,12 @@ class Handler extends ExceptionHandler
         if ($e instanceof TokenInvalidException || $e instanceof InvalidClaimException) {
             return [Response::HTTP_BAD_REQUEST, '토큰이 유효하지 않습니다.'];
         }
-
         if ($e instanceof TokenExpiredException) {
             return [Response::HTTP_BAD_REQUEST, '토큰이 만료되었습니다.'];
         }
-
         if ($e instanceof PayloadException) {
             return [Response::HTTP_BAD_REQUEST, '값을 임의로 변경할 수 없습니다.'];
         }
-
         if ($e instanceof UserNotDefinedException) {
             return [Response::HTTP_NOT_FOUND, '사용자를 식별할 수 없습니다.'];
         }
@@ -168,10 +157,38 @@ class Handler extends ExceptionHandler
 
     private function notifyException(DomainException $e)
     {
-        $sentryInstalled = $this->container->bound(Raven_Client::class);
-
+        $sentryInstalled = $this->container->bound('sentry');
         if ($sentryInstalled) {
-            $this->sentry->captureException($e);
+            $this->setUserContext();
+            $this->setTagsContext();
+            $this->setExtraContext();
+            SentryFacade::captureException($e);
         }
+    }
+
+    private function setUserContext()
+    {
+        $appContext = $this->container->make(ApplicationContext::class);
+        $user = $appContext->getUser();
+        SentryFacade::user_context([
+            'id' => $user->id,
+            'username' => $user->name,
+            'email' => $user->email,
+            'ip_address' => $appContext->getClientIp(),
+        ]);
+    }
+
+    private function setTagsContext()
+    {
+        //
+    }
+
+    private function setExtraContext()
+    {
+        $appContext = $this->container->make(ApplicationContext::class);
+        SentryFacade::extra_context([
+            'transaction_id' => $appContext->getTransactionId(),
+            'trace_number' => $appContext->getTraceNumber(),
+        ]);
     }
 }

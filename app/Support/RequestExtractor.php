@@ -14,7 +14,7 @@ class RequestExtractor implements Extractor
     public function extract(Request $request)
     {
         return [
-            'fingerprint' => $request->fingerprint(),
+            'fingerprint' => $this->extractFingerprint($request),
             'clientIp' => $request->getClientIp(),
             'method' => $request->getMethod(),
             'host' => $request->getHttpHost(),
@@ -37,5 +37,14 @@ class RequestExtractor implements Extractor
         }
 
         return $content;
+    }
+
+    private function extractFingerprint(Request $request)
+    {
+        try {
+            return $request->fingerprint();
+        } catch (\RuntimeException $e) {
+            return $e->getMessage();
+        }
     }
 }

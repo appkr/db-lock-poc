@@ -79,10 +79,10 @@ class RequestResponseLogger
         $data = [
             'request' => $this->requestExtractor->accept(new RequestScrambler($request)),
             'response' => $this->responseExtractor->accept(new ResponseScrambler($response)),
+            'execution_time' => microtime(true) - LARAVEL_START,
         ];
 
-        $this->logger->debug('Request & Response:' . PHP_EOL . json_encode($data,
-            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        $this->logger->debug('Request & Response:', $data);
     }
 
     private function shouldSkipLogging($request)

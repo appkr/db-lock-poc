@@ -26,6 +26,7 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
+    'version' => env('APP_VERSION', trim(exec('git log --pretty="%h" -n1 HEAD'))),
 
     /*
     |--------------------------------------------------------------------------
@@ -165,7 +166,8 @@ return [
         /*
          * Package Service Providers...
          */
-        App\Providers\SentryServiceProvider::class,
+        App\Providers\ApplicationContextServiceProvider::class,
+        Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
 
         /*
          * Application Service Providers...

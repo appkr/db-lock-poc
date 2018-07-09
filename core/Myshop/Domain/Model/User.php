@@ -78,6 +78,8 @@ class User extends Authenticatable implements JWTSubject, HasRoleAndPermission
 {
     use Notifiable;
 
+    const DEFAULT_USER_ID = 1;
+
     protected $fillable = [
         'name', 'email', 'password',
     ];
@@ -123,9 +125,16 @@ class User extends Authenticatable implements JWTSubject, HasRoleAndPermission
     // QUERY SCOPE
     // ACCESSOR & MUTATOR
 
-    public function getAllowedIpsAttribute(string $allowedIps)
+    /**
+     * @param string|null $allowedIps
+     * @return array
+     */
+    public function getAllowedIpsAttribute($allowedIps)
     {
-        return (array) json_decode($allowedIps ?: ['*']);
+        if (null === $allowedIps) {
+            return ['*'];
+        }
+        return (array) json_decode($allowedIps);
     }
 
     public function setAllowedIpsAttribute(array $allowedIps = [])
@@ -216,5 +225,18 @@ class User extends Authenticatable implements JWTSubject, HasRoleAndPermission
                 'permissions' => $this->permissions->implode('name', ','),
             ]
         ];
+    }
+
+    // HELPERS
+
+    public static function createDefaultUser(array $attributes = [])
+    {
+        $attributes = array_merge([
+            'id' => static::DEFAULT_USER_ID,
+            'name' => 'UNKNOWN',
+            'email' => 'unknown@example.com',
+        ], $attributes);
+
+        return new static($attributes);
     }
 }
